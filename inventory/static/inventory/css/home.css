@@ -1,12 +1,12 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f5f5f5;
+    background-color: #FFEFD5; /* crema zero waste */
     text-align: center;
     padding: 50px;
 }
 
 h1 {
-    color: #2e7d32; /* Verde elegante */
+    color: #8AA83C; /* Verde claro zero waste */
 }
 
 p {
@@ -16,7 +16,7 @@ p {
 }
 
 button {
-    background-color: #2e7d32;
+    background-color: #8AA83C; /* Verde claro zero waste */
     color: white;
     border: none;
     padding: 15px 30px;
@@ -27,5 +27,5 @@ button {
 }
 
 button:hover {
-    background-color: #1b5e20;
+    background-color: #5A7030;
 }
