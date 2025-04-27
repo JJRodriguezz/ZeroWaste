@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Zero Waste - Inventario</title>
+</head>
+<body>
+    <h1>Prendas Disponibles</h1>
+    <ul>
+        {% for prenda in prendas %}
+            <li>
+                <h2>{{ prenda.nombre }}</h2>
+                <img src="{{ prenda.imagen.url }}" width="200" alt="{{ prenda.nombre }}">
+                <p>{{ prenda.descripcion }}</p>
+                <p>Talla: {{ prenda.talla }}</p>
+                <p>Estado: {{ prenda.estado }}</p>
+                <p>Precio: ${{ prenda.precio }}</p>
+            </li>
+        {% empty %}
+            <li>No hay prendas disponibles en este momento.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

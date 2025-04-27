@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'inventory/css/home.css' %}">
+    <meta charset="UTF-8">
+    <title>Zero Waste - Home</title>
+</head>
+<body>
+    <h1>Bienvenidos a Zero Waste</h1>
+    <p>Zero Waste es una empresa de moda circular que promueve el consumo consciente ofreciendo ropa de segunda mano en perfectas condiciones.</p>
+    <p>Al elegirnos, contribuyes a reducir el impacto ambiental de la industria textil y apoyas un futuro más sostenible.</p>
+
+    <a href="{% url 'lista_prendas' %}">
+        <button>Ver Inventario</button>
+    </a>
+</body>
+</html>
