@@ -1,0 +1,134 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Contacto - Zero Waste</title>
+    <link rel="stylesheet" href="{% static 'inventory/css/home.css' %}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #FFF3E0;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .top-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: #FFEFD5;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo {
+            max-height: 60px;
+        }
+
+        .content {
+            margin-top: 120px;
+        }
+
+        h1 {
+            color: #5C7A29;
+        }
+
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 40px 0;
+        }
+
+        .social-buttons a {
+            text-decoration: none;
+        }
+
+        .social-button {
+            background-color: #8DB600;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .social-button:hover {
+            background-color: #7CA500;
+            transform: translateY(-2px);
+        }
+
+        .social-button img {
+            height: 24px;
+        }
+
+        .back-button {
+            margin-top: 30px;
+        }
+
+        .back-button a {
+            background-color: #CCCCCC;
+            color: #333;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .back-button a:hover {
+            background-color: #AAAAAA;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <img src="{% static 'inventory/img/logo.png' %}" alt="Logo Zero Waste" class="logo">
+    </div>
+
+    <div class="content">
+        <h1>CONTÁCTANOS</h1>
+        <p>Encuéntranos en nuestras redes sociales:</p>
+
+        <div class="social-buttons">
+            <a href="https://www.instagram.com/zerowaste_med" target="_blank">
+                <button class="social-button">
+                    <img src="{% static 'inventory/img/instagram.png' %}" alt="Instagram">
+                    Instagram
+                </button>
+            </a>
+            <a href="https://wa.me/573135558772" target="_blank">
+                <button class="social-button">
+                    <img src="{% static 'inventory/img/whatsapp.png' %}" alt="WhatsApp">
+                    WhatsApp
+                </button>
+            </a>
+            <a href="https://www.tiktok.com/@zerowaste_med" target="_blank">
+                <button class="social-button">
+                    <img src="{% static 'inventory/img/tiktok.png' %}" alt="TikTok">
+                    TikTok
+                </button>
+            </a>
+        </div>
+
+        <div class="back-button">
+            <a href="{% url 'home' %}">← Volver al inicio</a>
+        </div>
+    </div>
+
+</body>
+</html>

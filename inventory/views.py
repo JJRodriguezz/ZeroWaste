@@ -9,3 +9,6 @@ def lista_prendas(request):
 
 def home(request):
     return render(request, 'home.html')
+
+def contacto(request):
+    return render(request, 'contacto.html')
