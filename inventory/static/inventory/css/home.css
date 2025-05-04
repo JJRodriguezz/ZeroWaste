@@ -1,31 +1,128 @@
 body {
-    font-family: 'Arial', sans-serif;
-    background-color: #FFEFD5; /* crema zero waste */
+
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f0ebe5;
+}
+
+
+
+
+.mensaje-central {
     text-align: center;
-    padding: 50px;
+    padding: 40px 20px;
+    background-color: #f0ebe5;
+    color: #5a7030;
 }
 
-h1 {
-    color: #8AA83C; /* Verde claro zero waste */
+.mensaje-central h1 {
+    margin-top: 50px;
+    font-size: 2.5em;
+    margin-bottom: 10px;
 }
 
-p {
-    font-size: 18px;
-    color: #555;
+.mensaje-central p {
+    font-size: 1.2em;
+    color: #8aa83c;
+}
+
+.galeria {
+    text-align: center;
+    padding: 50px 20px;
+    background-color: #f0ebe5;
+}
+
+.galeria h2 {
+    font-size: 2em;
+    margin-bottom: 30px;
+}
+
+.galeria-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.prenda {
+    width: 200px;
+}
+
+.prenda img {
+    width: 80%;
+    border-radius: 10px;
+}
+
+.prenda p {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.cta {
+    text-align: center;
+    padding: 40px 0;
+}
+
+/* VIDEO DE FONDO */
+.video-fondo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.video-fondo video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.6);
+}
+
+/* SECCIÓN HERO */
+.hero {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* TEXTO SOBRE EL VIDEO */
+.hero-texto {
+    z-index: 1;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 40px 60px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.hero-texto h1 {
+    font-size: 40px;
+    color: #6a850a;
     margin-bottom: 20px;
 }
 
-button {
-    background-color: #8AA83C; /* Verde claro zero waste */
+.cta-boton {
+    display: inline-block;
+    background-color: #6a850a;
     color: white;
-    border: none;
-    padding: 15px 30px;
-    font-size: 18px;
-    border-radius: 8px;
-    cursor: pointer;
+    padding: 12px 24px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
     transition: background-color 0.3s ease;
 }
 
-button:hover {
-    background-color: #5A7030;
+.cta-boton:hover {
+    background-color: #5a6f09;
 }
+
+
+
+
+
