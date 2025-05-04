@@ -1,19 +1,61 @@
+{% load static %}
 <!DOCTYPE html>
+
+
 <html lang="es">
 <head>
-    {% load static %}
-
-    <link rel="stylesheet" href="{% static 'inventory/css/home.css' %}">
     <meta charset="UTF-8">
-    <title>Zero Waste - Home</title>
+    <title>Zero Waste - Moda Circular</title>
+    <link rel="stylesheet" href="{% static 'inventory/css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'inventory/css/navbar.css' %}">
+
 </head>
 <body>
-    <h1>Bienvenidos a Zero Waste</h1>
-    <p>Zero Waste es una empresa de moda circular que promueve el consumo consciente ofreciendo ropa de segunda mano en perfectas condiciones.</p>
-    <p>Al elegirnos, contribuyes a reducir el impacto ambiental de la industria textil y apoyas un futuro más sostenible.</p>
+{% include 'navbar.html' %}
+    <!-- Sección de Banner -->
+    <!-- Sección de Banner con video -->
+    <section class="hero">
+        <div class="video-fondo">
+            <video autoplay muted loop playsinline>
+                <source src="{% static 'inventory/video/5743177-uhd_4096_2160_25fps.mp4' %}" type="video/mp4">
+                Tu navegador no soporta el video.
+            </video>
+        </div>
 
-    <a href="{% url 'lista_prendas' %}">
-        <button>Ver Inventario</button>
-    </a>
+        <div class="hero-texto">
+            <h1>BIENVENID@</h1>
+            <a href="#galeria" class="cta-boton">VER CATÁLOGO</a>
+        </div>
+    </section>
+
+
+
+    <!-- Mensaje Principal -->
+    <section class="mensaje-central">
+        <h1>Moda circular, consciente y con propósito</h1>
+        <p>Transformamos el consumo de ropa con prendas reutilizadas, seleccionadas con amor.</p>
+    </section>
+
+    <!-- Galería Estática (por ahora) -->
+    <section class="galeria">
+        <h2>Descubre nuestras prendas</h2>
+        <div class="galeria-grid">
+            <div class="prenda">
+                <img src="{% static 'inventory/img/prenda1.png' %}" alt="Prenda 1">
+                <p>Camisa Vintage</p>
+            </div>
+            <div class="prenda">
+                <img src="{% static 'inventory/img/prenda2.png' %}" alt="Prenda 2">
+                <p>Jean Rework</p>
+            </div>
+            <div class="prenda">
+                <img src="{% static 'inventory/img/prenda3.png' %}" alt="Prenda 3">
+                <p>Blusa</p>
+            </div>
+        </div>
+    </section>
+
+
+
 </body>
 </html>
