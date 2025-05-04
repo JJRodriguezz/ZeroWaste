@@ -1,0 +1,143 @@
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Banner promocional */
+.black-banner {
+    background-color: black;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.black-banner a {
+    color: #00ff6a;
+    margin-left: 10px;
+    text-decoration: none;
+}
+
+/* Contenido de la navbar */
+.main-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 30px;
+    background-color: white;
+}
+
+.logo {
+    height: 40px;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+/* MENÚ NORMAL */
+.nav-links a {
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+}
+
+/* BUSCADOR */
+.search-box {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* ICONOS */
+.icons a {
+    margin-left: 15px;
+    font-size: 18px;
+    text-decoration: none;
+    color: black;
+}
+
+/* DROPDOWN SIMPLE */
+.dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    z-index: 1100;
+    min-width: 150px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    padding: 10px 0;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 20px;
+    color: black;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f0f0f0;
+}
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* ========== MEGA MENU PARA MUJER ========== */
+.mega-menu {
+    position: relative;
+}
+
+.mega-menu-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%; /* 📍 Cambiado de 0 a 50% */
+    transform: translateX(-50%); /* 📍 Lo centra horizontalmente */
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 30px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    z-index: 1100;
+    width: auto;
+    max-width: 100vw;    /* Ajusta según tu diseño */
+}
+
+
+.mega-menu:hover .mega-menu-content {
+    display: grid;
+}
+
+.menu-col h4 {
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+}
+
+.menu-col a {
+    display: block;
+    margin: 8px 0;
+    color: #333;
+    text-decoration: none;
+}
+
+.menu-col a:hover {
+    color: #7ca500;
+}

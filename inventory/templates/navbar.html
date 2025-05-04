@@ -1,0 +1,115 @@
+{% load static %}
+
+<header class="navbar">
+    <div class="top-bar">
+        <div class="black-banner">
+            CHATEA CON NOSOTROS - ESTRENA AHORA •
+            <a href="{% url 'contacto' %}">¡CONTÁCTANOS!</a>
+        </div>
+    </div>
+
+    <div class="main-navbar">
+        <a href="{% url 'home' %}">
+    <img src="{% static 'inventory/img/logo.png' %}" alt="Logo" class="logo">
+    </a>
+
+        <nav class="nav-links">
+
+            <!-- MEGA MENÚ MUJER -->
+            <div class="dropdown mega-menu">
+                <a href="#">Mujer</a>
+                <div class="mega-menu-content">
+                    <div class="menu-col">
+                        <h4>Ropa</h4>
+                        <a href="#">Blusas</a>
+                        <a href="#">Chaquetas</a>
+                        <a href="#">Camisas</a>
+                        <a href="#">Camisetas</a>
+                        <a href="#">Enterizos</a>
+                        <a href="#">Tops</a>
+                        <a href="#">Vestidos</a>
+                    </div>
+                    <div class="menu-col">
+                        <h4>Inferior</h4>
+                        <a href="#">Pantalones</a>
+                        <a href="#">Jeans</a>
+                        <a href="#">Faldas</a>
+                        <a href="#">Shorts</a>
+                        <a href="#">Bodies</a>
+                    </div>
+                    <div class="menu-col">
+                        <h4>Especiales</h4>
+                        <a href="#">Trajes de baño</a>
+                        <a href="#">Conjuntos</a>
+                        <a href="#">Deportivos</a>
+                        <a href="#">Pijamas</a>
+                        <a href="#">Ropa interior</a>
+                    </div>
+                    <div class="menu-col">
+                        <h4>Accesorios</h4>
+                        <a href="#">Bolsos y carteras</a>
+                        <a href="#">Zapatos</a>
+                        <a href="#">Sandalias</a>
+                        <a href="#">Accesorios</a>
+                    </div>
+                </div>
+            </div>
+
+            <span> | </span>
+
+            <!-- MEGA MENÚ HOMBRE -->
+            <div class="dropdown mega-menu">
+                <a href="#">Hombre</a>
+                <div class="mega-menu-content">
+                    <div class="menu-col">
+                        <h4>Ropa</h4>
+                        <a href="#">Camisas</a>
+                        <a href="#">Chaquetas</a>
+                        <a href="#">Pantalones</a>
+                        <a href="#">Zapatos</a>
+                        <a href="#">Deportivos</a>
+                        <a href="#">Blazers</a>
+                    </div>
+                    <div class="menu-col">
+                        <h4>Extras</h4>
+                        <a href="#">Sandalias</a>
+                        <a href="#">Accesorios</a>
+                        <a href="#">Artículos hogar</a>
+                    </div>
+                </div>
+            </div>
+
+            <span> | </span>
+
+            <!-- MENÚ NIÑO -->
+            <div class="dropdown">
+                <a href="#">Niño</a>
+                <div class="dropdown-menu">
+                    <a href="#">Camisas</a>
+                    <a href="#">Pantalones</a>
+                    <a href="#">Chaquetas</a>
+                    <a href="#">Zapatos</a>
+                </div>
+            </div>
+
+            <span> | </span>
+
+            <!-- MENÚ BEBÉS -->
+            <div class="dropdown">
+                <a href="#">Bebés</a>
+                <div class="dropdown-menu">
+                    <a href="#">Bodies</a>
+                    <a href="#">Conjuntos</a>
+                    <a href="#">Pijamas</a>
+                </div>
+            </div>
+
+        </nav>
+
+        <input type="text" placeholder="Buscar..." class="search-box">
+
+        <div class="icons">
+            <a href="#"><img width="20" height="20" src="https://img.icons8.com/ios/50/about-us-male.png" alt="perfil"/></a>
+        </div>
+    </div>
+</header>
