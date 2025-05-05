@@ -1,10 +1,32 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>{% block title %}Catálogo{% endblock %}</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="{% static 'inventory/css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'inventory/css/lista_prendas.css' %}">
 </head>
+
 <body>
+
+    <!-- Navbar -->
+    {% include 'navbar.html' %}
+
+    <!-- Título de la categoría -->
+    <section class="catalogo-header">
+        <div class="container">
+            <h1>{% block header %}Categoría{% endblock %}</h1>
+        </div>
+    </section>
+
+    <!-- Contenido del catálogo -->
+    <main class="catalogo-contenido">
+        {% block contenido %}
+        {% endblock %}
+    </main>
 
 </body>
 </html>

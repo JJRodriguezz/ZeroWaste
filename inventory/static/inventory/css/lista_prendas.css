@@ -1,0 +1,85 @@
+/* CABECERA DE CATEGORÍA */
+.catalogo-header {
+    background-color: #758D2E;
+    padding: 120px 0 50px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.catalogo-header h1 {
+    color: white;
+    font-size: 3rem;
+    margin: 0;
+    letter-spacing: 2px;
+    font-family: 'Arial', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+
+/* CONTENEDOR GENERAL */
+.catalogo-contenido {
+    max-width: 1000px;
+    margin: auto;
+    padding: 40px 20px;
+}
+
+/* CADA PRENDA */
+.prenda {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 30px;
+    margin-bottom: 40px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 30px;
+}
+
+/* IMAGEN DE LA PRENDA */
+.prenda img {
+    max-width: 200px;
+    max-height: 250px;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* INFORMACIÓN DE LA PRENDA */
+.info-prenda {
+    flex: 1;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+.info-prenda h3 {
+    font-size: 1.5rem;
+    margin: 5px 0;
+    text-transform: capitalize;
+}
+
+.info-prenda p {
+    margin: 6px 0;
+    font-size: 1rem;
+}
+
+.estado {
+    font-weight: bold;
+    color: #5c741d;
+}
+
+/* BOTÓN DE COMPRA */
+.boton-comprar {
+    background-color: #758D2E;
+    color: white;
+    text-decoration: none;
+    padding: 10px 25px;
+    border-radius: 20px;
+    display: inline-block;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.boton-comprar:hover {
+    background-color: #5a6e23;
+}
