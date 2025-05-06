@@ -1,0 +1,25 @@
+{% load static %}
+<!-- NAVBAR ADMIN -->
+<header class="admin-navbar">
+    <div class="admin-top-bar">
+        Bienvenido al Panel de Administración de Zero Waste
+    </div>
+
+    <div class="admin-main-navbar">
+        <a href="{% url 'admin_dashboard' %}">
+            <img src="{% static 'inventory/img/logo.png' %}" alt="Logo Zero Waste" class="logo">
+        </a>
+
+        <nav class="admin-nav-links">
+            <a href="{% url 'admin_dashboard' %}">🏠 Inicio</a>
+            <a href="{% url 'agregar_prenda' %}"> Añadir Prenda</a>
+            <a href="#"> Inventario</a>
+            <a href="#"> Ventas</a>
+            <a href="#"> Estadísticas</a>
+        </nav>
+
+        <div class="admin-icons">
+            <a href="#">Cerrar sesión 🚪</a>
+        </div>
+    </div>
+</header>
