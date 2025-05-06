@@ -28,3 +28,7 @@ def agregar_prenda(request):
     else:
         form = PrendaForm()
     return render(request, 'agregar_prenda.html', {'form': form})
+
+def ver_inventario(request):
+    prendas = Prenda.objects.all().order_by('-fecha_agregado')
+    return render(request, 'ver_inventario.html', {'prendas': prendas})
