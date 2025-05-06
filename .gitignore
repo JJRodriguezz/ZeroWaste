@@ -4,3 +4,6 @@ env_isa/
 __pycache__/
 *.pyc
 JJenv/
+# Ignorar archivos compilados de Python
+__pycache__/
+*.pyc

@@ -3,8 +3,13 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name='home'),  # Home
-    path('inventario/', views.lista_prendas, name='lista_prendas'), 
+    path('lista-prendas/', views.lista_prendas, name='lista_prendas'),
     path('contacto/', views.contacto, name='contacto'),
+    path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('agregar-prenda/', views.agregar_prenda, name='agregar_prenda'),
+    path('inventario/', views.ver_inventario, name='ver_inventario'),
+
+# Catálogo por categoría
     path('catalogo/camisetas/', views.catalogo_camisetas, name='catalogo_camisetas'),
     path('catalogo/pantalones/', views.catalogo_pantalones, name='catalogo_pantalones'),
     path('catalogo/bolsosycarteras/', views.catalogo_bolsosycarteras, name='catalogo_bolsosycarteras'),
