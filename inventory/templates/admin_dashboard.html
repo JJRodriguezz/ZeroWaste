@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Administración | Zero Waste</title>
+    <link rel="stylesheet" href="{% static 'inventory/css/admin_dashboard.css' %}">
+</head>
+<body>
+
+    {% include 'navbar_admin.html' %}  <!-- Navbar reusable -->
+
+    <main>
+        <section class="resumen">
+            <h2>Resumen General</h2>
+            <p>Aquí verás el resumen del inventario, ventas y más.</p>
+        </section>
+
+        <section class="accesos">
+            <h2>Accesos Rápidos</h2>
+            <div class="botones">
+                <a href="{% url 'agregar_prenda' %}"> Añadir prenda</a>
+                <a href="#"> Ver inventario</a>
+                <a href="#"> Registrar venta</a>
+                <a href="#"> Ver estadísticas</a>
+            </div>
+        </section>
+    </main>
+
+</body>
+</html>
