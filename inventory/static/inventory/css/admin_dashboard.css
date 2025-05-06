@@ -105,6 +105,14 @@ h2 {
     font-weight: 500;
 }
 
+.admin-icons a:hover {
+    background-color: #5a7030;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
 /* CENTRAR SECCIONES */
 .resumen,
 .accesos {
