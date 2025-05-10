@@ -10,8 +10,8 @@
 
     <div class="main-navbar">
         <a href="{% url 'home' %}">
-    <img src="{% static 'inventory/img/logo.png' %}" alt="Logo" class="logo">
-    </a>
+            <img src="{% static 'inventory/img/logo.png' %}" alt="Logo" class="logo">
+        </a>
 
         <nav class="nav-links">
 
@@ -106,7 +106,13 @@
 
         </nav>
 
-        <input type="text" placeholder="Buscar..." class="search-box">
+        <!-- Formulario de búsqueda funcional -->
+        <form method="GET" action="{% url 'lista_prendas' %}" class="search-form">
+            <input type="text" name="q" placeholder="Buscar..." value="{{ request.GET.q }}" class="search-box">
+            <button type="submit" class="search-icon">
+                <img width="20" height="20" src="https://img.icons8.com/ios/50/search--v1.png" alt="Buscar">
+            </button>
+        </form>
 
         <div class="icons">
             <a href="#"><img width="20" height="20" src="https://img.icons8.com/ios/50/about-us-male.png" alt="perfil"/></a>
