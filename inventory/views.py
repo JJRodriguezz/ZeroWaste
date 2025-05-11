@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Prenda
 from .forms import PrendaForm
 import unicodedata
+from inventory.models import Subcategoria
 
 
 def normalizar(texto):
@@ -39,12 +40,18 @@ def agregar_prenda(request):
         form = PrendaForm(request.POST, request.FILES)
         if form.is_valid():
             prenda = form.save(commit=False)
-            prenda.disponible = True  # siempre disponible al registrarla
+            prenda.disponible = True  # Siempre disponible al registrarla
             prenda.save()
             return redirect('admin_dashboard')
     else:
         form = PrendaForm()
-    return render(request, 'agregar_prenda.html', {'form': form})
+    
+    subcategorias = Subcategoria.objects.select_related('categoria')
+    
+    return render(request, 'agregar_prenda.html', {
+        'form': form,
+        'subcategorias': subcategorias
+    })
 
 def ver_inventario(request):
     prendas = Prenda.objects.all().order_by('-fecha_agregado')

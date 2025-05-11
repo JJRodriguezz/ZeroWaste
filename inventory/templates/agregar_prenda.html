@@ -57,6 +57,22 @@
                                 {{ form.imagen }}
                             </div>
 
+                            <!-- Categoría -->
+                            <div class="mb-3">
+                                <label class="form-label">{{ form.categoria.label }}</label>
+                                {{ form.categoria }}
+                            </div>
+
+                            <!-- Subcategoría renderizada manualmente -->
+                            <div class="mb-3">
+                                <label class="form-label">Subcategoría</label>
+                                <select name="subcategoria" id="id_subcategoria" class="form-select" title="Selecciona una subcategoría adecuada">
+                                    {% for sub in subcategorias %}
+                                        <option value="{{ sub.id }}" data-categoria="{{ sub.categoria.id }}">{{ sub.nombre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
                             <div class="d-grid">
                                 <button type="submit" class="btn boton-guardar">Guardar</button>
                             </div>
@@ -67,24 +83,52 @@
         </div>
     </main>
 
+    <!-- SCRIPT PARA FORMATO DE PRECIO -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const precioInput = document.getElementById('precio-input');
         
-            precioInput.addEventListener('input', function () {
-                let rawValue = precioInput.value.replace(/[^\d]/g, '');
-                if (rawValue) {
-                    const formatted = '$' + parseInt(rawValue, 10).toLocaleString('es-CO');
-                    precioInput.value = formatted;
-                } else {
-                    precioInput.value = '';
+            if (precioInput) {
+                precioInput.addEventListener('input', function () {
+                    let rawValue = precioInput.value.replace(/[^\d]/g, '');
+                    if (rawValue) {
+                        const formatted = '$' + parseInt(rawValue, 10).toLocaleString('es-CO');
+                        precioInput.value = formatted;
+                    } else {
+                        precioInput.value = '';
+                    }
+                });
+
+                const form = precioInput.closest('form');
+                form.addEventListener('submit', function () {
+                    let cleanValue = precioInput.value.replace(/[^\d]/g, '');
+                    precioInput.value = cleanValue;
+                });
+            }
+        });
+    </script>
+
+    <!-- SCRIPT PARA FILTRAR SUBCATEGORÍAS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const categoriaSelect = document.getElementById('categoria-select');
+            const subcategoriaSelect = document.getElementById('id_subcategoria');
+
+            const allOptions = Array.from(subcategoriaSelect.options);
+
+            categoriaSelect.addEventListener('change', function () {
+                const selectedCategoriaId = this.value;
+                subcategoriaSelect.innerHTML = '';
+
+                allOptions.forEach(opt => {
+                    if (opt.getAttribute('data-categoria') === selectedCategoriaId) {
+                        subcategoriaSelect.appendChild(opt);
+                    }
+                });
+
+                if (subcategoriaSelect.options.length === 1) {
+                    subcategoriaSelect.selectedIndex = 0;
                 }
-            });
-        
-            const form = precioInput.closest('form');
-            form.addEventListener('submit', function () {
-                let cleanValue = precioInput.value.replace(/[^\d]/g, '');
-                precioInput.value = cleanValue;
             });
         });
     </script>
