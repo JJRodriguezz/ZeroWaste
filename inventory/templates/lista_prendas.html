@@ -1,24 +1,40 @@
+{% load static humanize %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Zero Waste - Inventario</title>
+    <title>Catálogo de Prendas | Zero Waste</title>
+    <link rel="stylesheet" href="{% static 'inventory/css/lista_prendas.css' %}">
+    <link rel="stylesheet" href="{% static 'inventory/css/navbar.css' %}">
 </head>
 <body>
-    <h1>Prendas Disponibles</h1>
-    <ul>
-        {% for prenda in prendas %}
-            <li>
-                <h2>{{ prenda.nombre }}</h2>
-                <img src="{{ prenda.imagen.url }}" width="200" alt="{{ prenda.nombre }}">
-                <p>{{ prenda.descripcion }}</p>
-                <p>Talla: {{ prenda.talla }}</p>
-                <p>Estado: {{ prenda.estado }}</p>
-                <p>Precio: ${{ prenda.precio }}</p>
-            </li>
-        {% empty %}
-            <li>No hay prendas disponibles en este momento.</li>
-        {% endfor %}
-    </ul>
+    {% include 'navbar.html' %}
+    
+    <main class="container">
+        <h2 class="titulo">🛍 Catálogo de Prendas</h2>
+
+        <!-- Barra de Búsqueda -->
+        <form method="GET" action="{% url 'lista_prendas' %}" class="search-form">
+            <input type="text" name="q" placeholder="Buscar prendas por nombre o descripción..." value="{{ request.GET.q }}" class="search-input">
+            <button type="submit" class="search-button">Buscar</button>
+        </form>
+
+        <!-- Resultados -->
+        {% if prendas %}
+            <div class="galeria-grid">
+                {% for prenda in prendas %}
+                    <div class="prenda">
+                        <img src="{{ prenda.imagen.url }}" alt="{{ prenda.nombre }}">
+                        <h4>{{ prenda.nombre }}</h4>
+                        <p>{{ prenda.descripcion|truncatewords:10 }}</p>
+                        <p><strong>${{ prenda.precio|intcomma }}</strong></p>
+                        <p><small>{{ prenda.talla }}</small></p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="no-result">No se encontraron prendas con ese criterio.</p>
+        {% endif %}
+    </main>
 </body>
 </html>

@@ -1,12 +1,29 @@
 from django.shortcuts import render, redirect
 from .models import Prenda
 from .forms import PrendaForm
-# Create your views here.
+import unicodedata
+
+
+def normalizar(texto):
+    if not texto:
+        return ''
+    return unicodedata.normalize('NFKD', texto).encode('ASCII', 'ignore').decode('utf-8').lower()
 
 def lista_prendas(request):
-    prendas = Prenda.objects.filter(disponible=True).order_by('-fecha_agregado')
-    return render(request, 'lista_prendas.html', {'prendas': prendas})
+    query = request.GET.get('q', '').strip()
+    prendas = Prenda.objects.filter(disponible=True)
 
+    if query:
+        query_norm = normalizar(query)
+
+        if len(query) == 1:
+            prendas = prendas.filter(talla__iexact=query)
+        else:
+            prendas = [prenda for prenda in prendas if 
+                       query_norm in normalizar(prenda.nombre) or
+                       query_norm in normalizar(prenda.descripcion)]
+
+    return render(request, 'lista_prendas.html', {'prendas': prendas})
 
 def home(request):
     return render(request, 'home.html')
