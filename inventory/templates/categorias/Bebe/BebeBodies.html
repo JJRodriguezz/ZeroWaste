@@ -1,0 +1,24 @@
+{% extends "catalogo_base.html" %}
+
+{% block title %}Bodies{% endblock %}
+{% block header %}Bodies{% endblock %}
+
+{% block contenido %}
+    {% for prenda in prendas %}
+    <div class="prenda">
+        <img src="{{ prenda.imagen.url }}" alt="Imagen de {{ prenda.descripcion }}">
+        <div class="info-prenda">
+            <p class="estado">{{ prenda.estado }}</p>
+            <h3>{{ prenda.descripcion }}</h3>
+            <p>Talla {{ prenda.talla }}</p>
+            <p>${{ prenda.precio|floatformat:0 }}</p>
+            <a class="boton-comprar" href="https://wa.me/573135558772?text=Hola,%20quiero%20comprar%20esta%20prenda: {{ prenda.descripcion }}" target="_blank">
+                COMPRAR →
+            </a>
+        </div>
+    </div>
+    <hr>
+    {% empty %}
+    <p>No hay prendas disponibles.</p>
+    {% endfor %}
+{% endblock %}
