@@ -1,0 +1,146 @@
+{% load static humanize %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ventas | Zero Waste</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'inventory/css/admin_dashboard.css' %}">
+</head>
+<body>
+
+{% include 'navbar_admin.html' %}
+
+<main class="container-fluid px-5 py-5">
+    <h2 class="text-center mb-4">💸 Prendas Vendidas</h2>
+    <form method="get" class="row mb-4">
+        <div class="col-md-2">
+            <label>Desde:</label>
+            <input type="date" name="desde" class="form-control" value="{{ request.GET.desde }}">
+        </div>
+
+        <div class="col-md-2">
+            <label>Hasta:</label>
+            <input type="date" name="hasta" class="form-control" value="{{ request.GET.hasta }}">
+        </div>
+
+        <div class="col-md-4">
+            <label>Categoría:</label>
+            <select name="categoria" id="categoria-select" class="form-select">
+                <option value="">---------</option>
+                {% for cat in categorias %}
+                    <option value="{{ cat.id }}" data-nombre="{{ cat.nombre }}"
+                        {% if request.GET.categoria == cat.id|stringformat:"s" %}selected{% endif %}>
+                        {{ cat.nombre }} ({{ cat.grupo.nombre }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label>Subcategoría:</label>
+            <select name="subcategoria" id="subcategoria-select" class="form-select">
+                <option value="">---------</option>
+                {% for sub in subcategorias %}
+                    <option value="{{ sub.id }}" data-categoria="{{ sub.categoria.id }}"
+                        {% if request.GET.subcategoria == sub.id|stringformat:"s" %}selected{% endif %}>
+                        {{ sub.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col-md-1 d-flex align-items-end">
+            <button type="submit" class="btn btn-success w-150">Filtrar</button>
+        </div>
+    </form>
+
+
+    <div class="alert alert-info text-center">
+        Total de ventas en este rango: <strong>${{ total_ventas|floatformat:0 }}</strong>
+    </div>
+    <div class="alert alert-secondary text-center">
+        Total de prendas vendidas: <strong>{{ prendas|length }}</strong>
+    </div>
+    <a href="{% url 'exportar_ventas_excel' %}" class="btn btn-outline-primary mb-3">
+        📁 Exportar a Excel
+    </a>
+
+
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-danger text-center">
+                <tr>
+                    <th>ID</th>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Talla</th>
+                    <th>Estado</th>
+                    <th>Precio</th>
+                    <th>Fecha de publicación</th>
+                    <th>Fecha de venta</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for prenda in prendas %}
+                <tr>
+                    <td class="text-center fw-bold">{{ prenda.id }}</td>
+                    <td class="text-center">
+                        {% if prenda.imagen %}
+                            <img src="{{ prenda.imagen.url }}" alt="{{ prenda.nombre }}" width="100">
+                        {% else %}
+                            <span class="text-muted">Sin imagen</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ prenda.nombre }}</td>
+                    <td class="text-center">{{ prenda.talla }}</td>
+                    <td>{{ prenda.estado }}</td>
+                    <td class="text-end">${{ prenda.precio|floatformat:0|intcomma }}</td>
+                    <td class="text-center">{{ prenda.fecha_agregado|date:"d/m/Y" }}</td>
+                    <td class="text-center">{{ prenda.fecha_venta|date:"d/m/Y H:i" }}</td>
+
+                    <td class="text-center">
+                        <a href="{% url 'marcar_como_disponible' prenda.id %}" class="btn btn-sm btn-outline-success">
+                            Volver a disponibilidad
+                        </a>
+                    </td>
+
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="text-center">No hay prendas vendidas aún.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const categoriaSelect = document.getElementById('categoria-select');
+        const subcategoriaSelect = document.getElementById('subcategoria-select');
+
+        const allSubOptions = Array.from(subcategoriaSelect.options);
+
+        function filtrarSubcategorias(categoriaId) {
+            subcategoriaSelect.innerHTML = '<option value="">---------</option>';
+            allSubOptions.forEach(opt => {
+                if (opt.dataset.categoria === categoriaId) {
+                    subcategoriaSelect.appendChild(opt);
+                }
+            });
+        }
+
+        categoriaSelect.addEventListener('change', function () {
+            filtrarSubcategorias(this.value);
+        });
+
+        const selectedCategoria = categoriaSelect.value;
+        if (selectedCategoria) {
+            filtrarSubcategorias(selectedCategoria);
+        }
+    });
+</script>
+
+</body>
+</html>
