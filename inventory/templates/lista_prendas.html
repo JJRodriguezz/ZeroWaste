@@ -6,35 +6,410 @@
     <title>Catálogo de Prendas | Zero Waste</title>
     <link rel="stylesheet" href="{% static 'inventory/css/lista_prendas.css' %}">
     <link rel="stylesheet" href="{% static 'inventory/css/navbar.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .titulo-seccion {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .titulo {
+            font-size: 2em;
+            font-weight: 500;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+        }
+
+        .galeria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            padding: 20px;
+        }
+
+        .prenda {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .prenda:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+        }
+
+        .prenda-imagen {
+            width: 100%;
+            height: 350px;
+            position: relative;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .prenda-imagen img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .prenda:hover .prenda-imagen img {
+            transform: scale(1.03);
+        }
+
+        .prenda-info {
+            padding: 20px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .prenda-nombre {
+            font-size: 1.1em;
+            font-weight: 500;
+            color: #2c3e50;
+            margin: 0 0 8px 0;
+            line-height: 1.4;
+            width: 100%;
+        }
+
+        .prenda-descripcion {
+            font-size: 0.9em;
+            color: #666;
+            margin: 0 0 15px 0;
+            line-height: 1.6;
+            width: 100%;
+        }
+
+        .prenda-detalles {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .prenda-precio {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .prenda-talla {
+            padding: 4px 12px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .btn-comprar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 20px;
+            background-color: #00E676;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            width: auto;
+            min-width: 200px;
+            margin: 0 auto;
+        }
+
+        .btn-comprar:hover {
+            background-color: #00C853;
+        }
+
+        .btn-comprar img {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+        }
+
+        .no-result {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .no-result-texto {
+            font-size: 1.1em;
+            color: #666;
+            margin: 10px 0;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .galeria-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+                padding: 10px;
+            }
+
+            .prenda-imagen {
+                height: 300px;
+            }
+
+            .btn-comprar {
+                font-size: 0.85em;
+                min-width: 180px;
+            }
+        }
+
+        /* Animaciones suaves */
+        .prenda {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Estilos del menú desplegable de búsqueda */
+        .search-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 24px;
+            z-index: 1000;
+            margin-top: 10px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .search-dropdown h3 {
+            font-size: 1.2em;
+            color: #2c3e50;
+            margin: 0 0 20px 0;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f2f5;
+        }
+
+        .productos-recomendados {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .producto-recomendado {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s ease;
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid #f0f2f5;
+        }
+
+        .producto-recomendado:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .producto-recomendado img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f8f9fa;
+        }
+
+        .producto-info {
+            padding: 16px;
+        }
+
+        .producto-nombre {
+            font-size: 0.95em;
+            font-weight: 500;
+            color: #2c3e50;
+            margin: 0 0 8px 0;
+            line-height: 1.4;
+        }
+
+        .producto-precio {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #00a650;
+        }
+
+        /* Overlay de fondo oscuro */
+        .search-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Animaciones */
+        .search-dropdown {
+            animation: slideDown 0.3s ease;
+            transform-origin: top center;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Scrollbar personalizada */
+        .search-dropdown::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .search-dropdown::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .search-dropdown::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        .search-dropdown::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .search-dropdown {
+                padding: 16px;
+                margin-top: 5px;
+            }
+
+            .productos-recomendados {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 16px;
+            }
+
+            .producto-recomendado img {
+                height: 150px;
+            }
+        }
+    </style>
 </head>
 <body>
     {% include 'navbar.html' %}
     
     <main class="container">
-        <h2 class="titulo">🛍 Catálogo de Prendas</h2>
+        <div class="titulo-seccion">
+            <h2 class="titulo">🛍️ Catálogo de Prendas</h2>
+        </div>
 
-        <!-- Barra de Búsqueda -->
-        <form method="GET" action="{% url 'lista_prendas' %}" class="search-form">
-            <input type="text" name="q" placeholder="Buscar prendas por nombre o descripción..." value="{{ request.GET.q }}" class="search-input">
-            <button type="submit" class="search-button">Buscar</button>
-        </form>
-
-        <!-- Resultados -->
         {% if prendas %}
             <div class="galeria-grid">
                 {% for prenda in prendas %}
-                    <div class="prenda">
-                        <img src="{{ prenda.imagen.url }}" alt="{{ prenda.nombre }}">
-                        <h4>{{ prenda.nombre }}</h4>
-                        <p>{{ prenda.descripcion|truncatewords:10 }}</p>
-                        <p><strong>${{ prenda.precio|intcomma }}</strong></p>
-                        <p><small>{{ prenda.talla }}</small></p>
-                    </div>
+                    <article class="prenda">
+                        <div class="prenda-imagen">
+                            <img src="{{ prenda.imagen.url }}" alt="{{ prenda.nombre }}">
+                        </div>
+                        <div class="prenda-info">
+                            <h3 class="prenda-nombre">{{ prenda.nombre }}</h3>
+                            <p class="prenda-descripcion">{{ prenda.descripcion|truncatewords:15 }}</p>
+                            <div class="prenda-detalles">
+                                <span class="prenda-precio">${{ prenda.precio|intcomma }}</span>
+                                <span class="prenda-talla">{{ prenda.talla }}</span>
+                            </div>
+                            <a href="https://web.whatsapp.com/send?phone=573135558772&text=¡Hola!%20👋%20Me%20encantaría%20comprar%20este%20artículo%20de%20Zero%20Waste%20✨%0A%0A👕%20Nombre%3A%20{{ prenda.nombre|urlencode }}%0A🏷️%20ID%3A%20{{ prenda.id }}%0A💰%20Precio%3A%20%24{{ prenda.precio|intcomma }}%0A📏%20Talla%3A%20{{ prenda.talla }}%0A%0A¿Me%20podrías%20ayudar%20con%20la%20compra%3F%20😊" 
+                               target="_blank" 
+                               class="btn-comprar">
+                                <img src="{% static 'inventory/img/whatsapp.png' %}" alt="WhatsApp">
+                                Comprar por WhatsApp
+                            </a>
+                        </div>
+                    </article>
                 {% endfor %}
             </div>
         {% else %}
-            <p class="no-result">No se encontraron prendas con ese criterio.</p>
+            <div class="no-result">
+                <p class="no-result-texto">No se encontraron prendas con ese criterio.</p>
+            </div>
         {% endif %}
     </main>
+
+    <div class="search-dropdown">
+        <h3>Productos recomendados</h3>
+        <div class="productos-recomendados">
+            {% for producto in productos_recomendados %}
+                <a href="#" class="producto-recomendado">
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+                    <div class="producto-info">
+                        <h4 class="producto-nombre">{{ producto.nombre }}</h4>
+                        <p class="producto-precio">${{ producto.precio|intcomma }}</p>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const whatsappLinks = document.querySelectorAll('.btn-comprar');
+            
+            whatsappLinks.forEach(link => {
+                const currentHref = link.getAttribute('href');
+                if (isMobile) {
+                    link.href = currentHref.replace('web.whatsapp.com', 'api.whatsapp.com');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
+

@@ -12,14 +12,17 @@ from django.db.models.functions import TruncDate
 import openpyxl
 
 def normalizar(texto):
-    if not texto:
-        return ''
-    return unicodedata.normalize('NFKD', texto).encode('ASCII', 'ignore').decode('utf-8').lower()
+    """Normaliza el texto para búsquedas insensibles a tildes y mayúsculas"""
+    texto = str(texto).lower()
+    return ''.join(c for c in unicodedata.normalize('NFD', texto) if unicodedata.category(c) != 'Mn')
 
 @login_required
 def lista_prendas(request):
     query = request.GET.get('q', '').strip()
     prendas = Prenda.objects.filter(disponible=True)
+
+    # Obtener prendas recomendadas de forma aleatoria
+    prendas_recomendadas = Prenda.objects.filter(disponible=True).order_by('?')[:5]
 
     if query:
         query_norm = normalizar(query)
@@ -27,11 +30,49 @@ def lista_prendas(request):
         if len(query) == 1:
             prendas = prendas.filter(talla__iexact=query)
         else:
-            prendas = [prenda for prenda in prendas if
-                       query_norm in normalizar(prenda.nombre) or
-                       query_norm in normalizar(prenda.descripcion)]
+            # Primero buscamos coincidencias en grupos
+            grupos_busqueda = {
+                'mujer': 'Mujer',
+                'hombre': 'Hombre',
+                'niño': 'Niño',
+                'nino': 'Niño',
+                'bebe': 'Bebé',
+                'bebé': 'Bebé'
+            }
+            
+            grupo_encontrado = grupos_busqueda.get(query_norm)
+            if grupo_encontrado:
+                prendas = prendas.filter(subcategoria__categoria__grupo__nombre=grupo_encontrado)
+            else:
+                # Buscamos coincidencias en categorías y subcategorías
+                categorias_match = Categoria.objects.filter(nombre__icontains=query)
+                subcategorias_match = Subcategoria.objects.filter(nombre__icontains=query)
+                
+                # Creamos una lista para almacenar todas las prendas que coinciden
+                prendas_match = []
+                
+                # Agregamos prendas que coinciden por categoría
+                for categoria in categorias_match:
+                    prendas_match.extend(list(prendas.filter(subcategoria__categoria=categoria)))
+                
+                # Agregamos prendas que coinciden por subcategoría
+                for subcategoria in subcategorias_match:
+                    prendas_match.extend(list(prendas.filter(subcategoria=subcategoria)))
+                
+                # Agregamos prendas que coinciden por nombre o descripción
+                prendas_match.extend([
+                    prenda for prenda in prendas if
+                    query_norm in normalizar(prenda.nombre) or
+                    query_norm in normalizar(prenda.descripcion)
+                ])
+                
+                # Eliminamos duplicados manteniendo el orden
+                prendas = list(dict.fromkeys(prendas_match))
 
-    return render(request, 'lista_prendas.html', {'prendas': prendas})
+    return render(request, 'lista_prendas.html', {
+        'prendas': prendas,
+        'prendas_recomendadas': prendas_recomendadas
+    })
 
 @login_required
 def marcar_como_disponible(request, prenda_id):
