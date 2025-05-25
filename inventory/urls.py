@@ -11,6 +11,8 @@ urlpatterns = [
     path('marcar-disponible/<int:prenda_id>/', views.marcar_como_disponible, name='marcar_como_disponible'),
     path('ventas/exportar/', views.exportar_ventas_excel, name='exportar_ventas_excel'),
     path('estadisticas/', views.ver_estadisticas, name='estadisticas'),
+    path('users/', include('users.urls')),
+    path('catalogo/recientes/', views.catalogo_recientes, name='catalogo_recientes'),
 
     path('contacto/', views.contacto, name='contacto'),
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),

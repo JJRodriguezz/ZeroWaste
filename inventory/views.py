@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import Prenda
 from django.http import HttpResponse
 from .forms import PrendaForm
-import unicodedata
+import unicodedata, random
 from inventory.models import Subcategoria, Categoria
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
@@ -82,8 +82,18 @@ def marcar_como_disponible(request, prenda_id):
     return redirect('ver_ventas')
 
 def home(request):
-    return render(request, 'home.html')
+    prendas_recientes = Prenda.objects.filter(disponible=True).order_by('-fecha_agregado')[:10]
+    todas = list(Prenda.objects.filter(disponible=True))
+    prendas_random = random.sample(todas, min(len(todas), 3))
 
+    return render(request, 'home.html', {
+        'prendas_recientes': prendas_recientes,
+        'prendas_random': prendas_random
+    })
+
+def catalogo_recientes(request):
+    prendas_recientes = Prenda.objects.filter(disponible=True).order_by('-fecha_agregado')[:10]
+    return render(request, 'recientes.html', {'prendas_recientes': prendas_recientes})
 
 def contacto(request):
     return render(request, 'contacto.html')

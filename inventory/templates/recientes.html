@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lo Más Reciente | Zero Waste</title>
+    <link rel="stylesheet" href="{% static 'inventory/css/lista_prendas.css' %}">
+    <link rel="stylesheet" href="{% static 'inventory/css/navbar.css' %}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+
+    <main class="container py-5" style="margin-top: 150px;">
+        <h2 class="text-center my-4">🆕 Lo más reciente</h2>
+        <div class="galeria-grid">
+            {% for prenda in prendas_recientes %}
+                <div class="prenda">
+        <img src="{{ prenda.imagen.url }}" alt="Imagen de {{ prenda.descripcion }}">
+        <div class="info-prenda">
+            <p class="estado">{{ prenda.estado }}</p>
+            <h3>{{ prenda.nombre }}</h3>
+            <h4>{{ prenda.descripcion }}</h4>
+            <p>Talla {{ prenda.talla }}</p>
+            <p>${{ prenda.precio|floatformat:0 }}</p>
+            <a class="boton-comprar" href="https://web.whatsapp.com/send?phone=573135558772&text=¡Hola!%20👋%20Me%20encantaría%20comprar%20este%20artículo%20de%20Zero%20Waste%20✨%0A%0A👕%20Nombre%3A%20{{ prenda.nombre|urlencode }}%0A🏷️%20ID%3A%20{{ prenda.id }}%0A💰%20Precio%3A%20%24{{ prenda.precio|floatformat:0}}%0A📏%20Talla%3A%20{{ prenda.talla }}%0A%0A¿Me%20podrías%20ayudar%20con%20la%20compra%3F%20😊"
+               target="_blank"
+               class="btn-comprar-menu">
+                COMPRAR →
+            </a>
+        </div>
+    </div>
+            {% empty %}
+                <p class="text-center">No hay prendas recientes disponibles.</p>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+</html>
