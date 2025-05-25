@@ -1,9 +1,17 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 urlpatterns = [
+    path('users/', include('users.urls')),
     path('', views.home, name='home'),  # Home
-    path('lista-prendas/', views.lista_prendas, name='lista_prendas'), 
+    path('lista-prendas/', views.lista_prendas, name='lista_prendas'),
+    path('editar-prenda/<int:prenda_id>/', views.editar_prenda, name='editar_prenda'),
+    path('marcar-vendida/<int:prenda_id>/', views.marcar_como_vendida, name='marcar_como_vendida'),
+    path('ventas/', views.ver_ventas, name='ver_ventas'),
+    path('marcar-disponible/<int:prenda_id>/', views.marcar_como_disponible, name='marcar_como_disponible'),
+    path('ventas/exportar/', views.exportar_ventas_excel, name='exportar_ventas_excel'),
+    path('estadisticas/', views.ver_estadisticas, name='estadisticas'),
+
     path('contacto/', views.contacto, name='contacto'),
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('agregar-prenda/', views.agregar_prenda, name='agregar_prenda'),
