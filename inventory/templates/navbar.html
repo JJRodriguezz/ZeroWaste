@@ -1,4 +1,4 @@
-{% load static %}
+{% load static humanize %}
 
 <header class="navbar">
     <div class="top-bar">
@@ -106,16 +106,397 @@
 
         </nav>
 
-        <!-- Formulario de búsqueda funcional -->
-        <form method="GET" action="{% url 'lista_prendas' %}" class="search-form">
-            <input type="text" name="q" placeholder="Buscar..." value="{{ request.GET.q }}" class="search-box">
-            <button type="submit" class="search-icon">
-                <img width="20" height="20" src="https://img.icons8.com/ios/50/search--v1.png" alt="Buscar">
-            </button>
-        </form>
+        <!-- Contenedor de búsqueda -->
+        <div class="search-container">
+            <!-- Barra de búsqueda principal -->
+            <form method="GET" action="{% url 'lista_prendas' %}" class="search-form">
+                <input type="text" 
+                       name="q" 
+                       placeholder="Buscar..." 
+                       value="{{ request.GET.q }}" 
+                       class="search-box"
+                       autocomplete="off">
+                <button type="submit" class="search-icon">
+                    <img width="20" height="20" src="https://img.icons8.com/ios/50/search--v1.png" alt="Buscar">
+                </button>
+            </form>
+
+            <!-- Menú desplegable de búsqueda -->
+            <div class="search-dropdown">
+                <button class="close-search" onclick="closeSearchMenu()">&times;</button>
+                <div class="search-dropdown-content">
+                    <form method="GET" action="{% url 'lista_prendas' %}" class="search-form-large">
+                        <input type="text" 
+                               name="q" 
+                               placeholder="¿Qué estás buscando?" 
+                               value="{{ request.GET.q }}" 
+                               class="search-input-large"
+                               autocomplete="off">
+                    </form>
+
+                    <div class="search-sections">
+                        <h3 class="search-section-title">Productos recomendados</h3>
+                        <div class="recommended-products">
+                            {% for prenda in prendas_recomendadas %}
+                                <div class="recommended-product">
+                                    <img src="{{ prenda.imagen.url }}" alt="{{ prenda.nombre }}">
+                                    <div class="producto-info">
+                                        <h4>{{ prenda.nombre }}</h4>
+                                        <p>${{ prenda.precio|intcomma }}</p>
+                                        <a href="https://web.whatsapp.com/send?phone=573135558772&text=¡Hola!%20👋%20Me%20encantaría%20comprar%20este%20artículo%20de%20Zero%20Waste%20✨%0A%0A👕%20Nombre%3A%20{{ prenda.nombre|urlencode }}%0A🏷️%20ID%3A%20{{ prenda.id }}%0A💰%20Precio%3A%20%24{{ prenda.precio|intcomma }}%0A📏%20Talla%3A%20{{ prenda.talla }}%0A%0A¿Me%20podrías%20ayudar%20con%20la%20compra%3F%20😊" 
+                                               target="_blank" 
+                                               class="btn-comprar-menu">
+                                            Comprar
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overlay para fondo oscuro -->
+        <div class="search-overlay"></div>
 
         <div class="icons">
             <a href="#"><img width="20" height="20" src="https://img.icons8.com/ios/50/about-us-male.png" alt="perfil"/></a>
         </div>
     </div>
 </header>
+
+<style>
+    .search-container {
+        position: relative;
+        flex: 0 1 300px;
+    }
+
+    .search-dropdown {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: white;
+        border-radius: 0 0 12px 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        padding: 24px;
+        z-index: 1000;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+
+    .search-dropdown.active {
+        display: block;
+        animation: slideDown 0.3s ease;
+    }
+
+    .search-dropdown-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .search-form-large {
+        max-width: 600px;
+        margin: 20px auto 30px;
+        position: relative;
+    }
+
+    .search-input-large {
+        width: 100%;
+        padding: 15px 20px;
+        font-size: 16px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+    .search-input-large:focus {
+        border-color: #2c3e50;
+        box-shadow: 0 0 0 2px rgba(44,62,80,0.1);
+    }
+
+    .search-sections {
+        margin-top: 30px;
+    }
+
+    .search-section-title {
+        font-size: 1.2em;
+        color: #2c3e50;
+        margin: 0 0 20px 0;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #f0f2f5;
+    }
+
+    .recommended-products {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 24px;
+        margin-top: 16px;
+    }
+
+    .recommended-product {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.2s ease;
+        text-decoration: none;
+        color: inherit;
+        border: 1px solid #f0f2f5;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .recommended-product:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    .recommended-product img {
+        width: 100%;
+        height: 250px;
+        object-fit: contain;
+        background: #f8f9fa;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .producto-info {
+        padding: 16px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        text-align: center;
+        width: 100%;
+    }
+
+    .recommended-product h4 {
+        font-size: 0.95em;
+        font-weight: 500;
+        color: #2c3e50;
+        margin: 0 0 8px 0;
+        line-height: 1.4;
+        text-align: center;
+    }
+
+    .recommended-product p {
+        font-size: 1.1em;
+        font-weight: 600;
+        color: #00a650;
+        margin: 0 0 12px 0;
+        text-align: center;
+    }
+
+    .btn-comprar-menu {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 20px;
+        background-color: #00E676;
+        color: white;
+        text-align: center;
+        border: none;
+        border-radius: 25px;
+        font-size: 0.85em;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-decoration: none;
+        margin-top: auto;
+        width: auto;
+        min-width: 120px;
+    }
+
+    .btn-comprar-menu:hover {
+        background-color: #00C853;
+        text-decoration: none;
+        color: white;
+    }
+
+    .close-search {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #666;
+        cursor: pointer;
+        padding: 5px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .close-search:hover {
+        background: #f0f2f5;
+        color: #333;
+    }
+
+    .search-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+        backdrop-filter: blur(4px);
+    }
+
+    .search-overlay.active {
+        display: block;
+    }
+
+    /* Scrollbar personalizada */
+    .search-dropdown::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .search-dropdown::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+
+    .search-dropdown::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+    }
+
+    .search-dropdown::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .search-dropdown {
+            padding: 16px;
+        }
+
+        .search-dropdown-content {
+            padding: 10px;
+        }
+
+        .recommended-products {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 16px;
+        }
+
+        .recommended-product img {
+            height: 200px;
+        }
+
+        .search-form-large {
+            margin: 15px auto 20px;
+        }
+
+        .search-input-large {
+            padding: 12px 16px;
+            font-size: 14px;
+        }
+    }
+
+    /* Estilos para la barra de búsqueda en el navbar */
+    .search-box {
+        width: 100%;
+        padding: 8px 35px 8px 15px;
+        border: 1px solid #ddd;
+        border-radius: 20px;
+        font-size: 14px;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+    .search-box:focus {
+        border-color: #4a90e2;
+        box-shadow: 0 0 0 2px rgba(74,144,226,0.2);
+    }
+
+    .search-icon {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchBox = document.querySelector('.search-box');
+        const searchDropdown = document.querySelector('.search-dropdown');
+        const searchOverlay = document.querySelector('.search-overlay');
+        const searchContainer = document.querySelector('.search-container');
+        const searchInputLarge = document.querySelector('.search-input-large');
+
+        // Función para abrir el menú de búsqueda
+        function openSearchMenu() {
+            searchDropdown.classList.add('active');
+            searchOverlay.classList.add('active');
+            if (searchInputLarge) {
+                searchInputLarge.focus();
+                // Copiar el texto de la barra pequeña a la grande
+                searchInputLarge.value = searchBox.value;
+            }
+        }
+
+        // Función para cerrar el menú de búsqueda
+        window.closeSearchMenu = function() {
+            searchDropdown.classList.remove('active');
+            searchOverlay.classList.remove('active');
+        }
+
+        // Abrir al hacer clic en el input
+        searchBox.addEventListener('click', function(e) {
+            e.stopPropagation();
+            openSearchMenu();
+        });
+
+        // Cerrar al hacer clic en el overlay
+        searchOverlay.addEventListener('click', function(e) {
+            closeSearchMenu();
+        });
+
+        // Prevenir que el clic en el dropdown cierre el menú
+        searchDropdown.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+
+        // Cerrar al presionar ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeSearchMenu();
+            }
+        });
+
+        // Sincronizar las barras de búsqueda
+        searchInputLarge.addEventListener('input', function(e) {
+            searchBox.value = e.target.value;
+        });
+    });
+</script>
