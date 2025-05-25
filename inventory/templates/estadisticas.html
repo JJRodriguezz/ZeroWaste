@@ -1,0 +1,100 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadísticas de Ventas | Zero Waste</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static 'inventory/css/admin_dashboard.css' %}">
+    <style>
+        .chart-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        h2 { text-align: center; margin-top: 60px; }
+    </style>
+</head>
+<body>
+    {% include 'navbar_admin.html' %}
+
+    <main class="container-fluid">
+        <h2>📊 Estadísticas de Ventas</h2>
+
+        <div class="chart-container">
+            <h5 class="text-center">Ventas por Subcategoría (💰)</h5>
+            <canvas id="subcategoriaChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <h5 class="text-center">Ingresos por Fecha (📅)</h5>
+            <canvas id="fechaChart"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <h5 class="text-center">Distribución por Categoría (🥧)</h5>
+            <canvas id="categoriaChart"></canvas>
+        </div>
+    </main>
+
+    <script>
+        // Gráfico de barras - Subcategoría
+        const subcatCtx = document.getElementById('subcategoriaChart').getContext('2d');
+        new Chart(subcatCtx, {
+            type: 'bar',
+            data: {
+                labels: [{% for item in ventas_subcat %}'{{ item.subcategoria__nombre }}',{% endfor %}],
+                datasets: [{
+                    label: 'Total vendido ($)',
+                    data: [{% for item in ventas_subcat %}{{ item.total|floatformat:0 }},{% endfor %}],
+                    backgroundColor: '#84c684'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // Gráfico de línea - Fecha
+        const fechaCtx = document.getElementById('fechaChart').getContext('2d');
+        new Chart(fechaCtx, {
+            type: 'line',
+            data: {
+                labels: [{% for item in ventas_fecha %}'{{ item.fecha|date:"d/m" }}',{% endfor %}],
+                datasets: [{
+                    label: 'Ingresos por día',
+                    data: [{% for item in ventas_fecha %}{{ item.total|floatformat:0 }},{% endfor %}],
+                    borderColor: '#4a90e2',
+                    backgroundColor: 'rgba(74, 144, 226, 0.2)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // Gráfico de pastel - Categoría
+        const catCtx = document.getElementById('categoriaChart').getContext('2d');
+        new Chart(catCtx, {
+            type: 'pie',
+            data: {
+                labels: [{% for item in ventas_categoria %}'{{ item.subcategoria__categoria__nombre }}',{% endfor %}],
+                datasets: [{
+                    data: [{% for item in ventas_categoria %}{{ item.total|floatformat:0 }},{% endfor %}],
+                    backgroundColor: ['#f9ca24', '#f0932b', '#eb4d4b', '#6ab04c', '#7ed6df']
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    </script>
+</body>
+</html>
