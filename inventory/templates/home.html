@@ -24,7 +24,8 @@
 
         <div class="hero-texto">
             <h1>BIENVENID@</h1>
-            <a href="#galeria" class="cta-boton">VER CATÁLOGO</a>
+            <a href="{% url 'catalogo_recientes' %}" class="cta-boton">VER LO MÁS NUEVO</a>
+
         </div>
     </section>
 
@@ -36,21 +37,16 @@
 
     <!-- Galería Estática (por ahora) -->
     <section class="galeria">
-        <h2>Descubre nuestras prendas</h2>
-        <div class="galeria-grid">
+    <h2>Tal vez te guste...</h2>
+    <div class="galeria-grid">
+        {% for prenda in prendas_random %}
             <div class="prenda">
-                <img src="{% static 'inventory/img/prenda1.png' %}" alt="Prenda 1">
-                <p>Camisa Vintage</p>
+                <img src="{{ prenda.imagen.url }}" alt="{{ prenda.nombre }}">
+                <p>{{ prenda.nombre }}</p>
             </div>
-            <div class="prenda">
-                <img src="{% static 'inventory/img/prenda2.png' %}" alt="Prenda 2">
-                <p>Jean Rework</p>
-            </div>
-            <div class="prenda">
-                <img src="{% static 'inventory/img/prenda3.png' %}" alt="Prenda 3">
-                <p>Blusa</p>
-            </div>
-        </div>
-    </section>
+        {% endfor %}
+    </div>
+</section>
+
 </body>
 </html>

@@ -8,10 +8,13 @@
         <img src="{{ prenda.imagen.url }}" alt="Imagen de {{ prenda.descripcion }}">
         <div class="info-prenda">
             <p class="estado">{{ prenda.estado }}</p>
-            <h3>{{ prenda.descripcion }}</h3>
+            <h3>{{ prenda.nombre }}</h3>
+            <h4>{{ prenda.descripcion }}</h4>
             <p>Talla {{ prenda.talla }}</p>
             <p>${{ prenda.precio|floatformat:0 }}</p>
-            <a class="boton-comprar" href="https://wa.me/573135558772?text=Hola,%20quiero%20comprar%20esta%20prenda: {{ prenda.descripcion }}" target="_blank">
+            <a class="boton-comprar" href="https://web.whatsapp.com/send?phone=573135558772&text=¡Hola!%20👋%20Me%20encantaría%20comprar%20este%20artículo%20de%20Zero%20Waste%20✨%0A%0A👕%20Nombre%3A%20{{ prenda.nombre|urlencode }}%0A🏷️%20ID%3A%20{{ prenda.id }}%0A💰%20Precio%3A%20%24{{ prenda.precio|floatformat:0}}%0A📏%20Talla%3A%20{{ prenda.talla }}%0A%0A¿Me%20podrías%20ayudar%20con%20la%20compra%3F%20😊"
+               target="_blank"
+               class="btn-comprar-menu">
                 COMPRAR →
             </a>
         </div>

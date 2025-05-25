@@ -94,3 +94,8 @@ body {
     border-top: 1px solid #ddd;
     margin: 20px 0;
 }
+
+.info-prenda h4{
+    color: grey;
+    font-weight: normal ;
+}
