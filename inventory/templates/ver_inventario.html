@@ -16,6 +16,16 @@
 
     <main class="container-fluid px-5 py-5">
         <h2 class="text-center mb-4">📦 Inventario de Prendas</h2>
+        <form method="get" class="row mb-4">
+            <div class="text-center mb-4">
+                <input type="number" name="buscar_id" class="form-control text-center" placeholder="Buscar por ID" value="{{ request.GET.buscar_id }}">
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success">Buscar</button>
+            </div>
+        </form>
+
+
         <div class="table-responsive">
             <table class="table table-bordered table-hover align-middle">
                 <thead class="table-success text-center">
@@ -47,7 +57,10 @@
                         <td class="text-end">${{ prenda.precio|floatformat:0|intcomma }}</td>
                         <td class="text-center">{{ prenda.fecha_agregado|date:"d/m/Y" }}</td>
                         <td class="text-center">
-                            <a href="#" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <a href="{% url 'editar_prenda' prenda.id %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                            <a href="{% url 'marcar_como_vendida' prenda.id %}" class="btn btn-sm btn-outline-danger">
+                                Marcar como vendida
+                            </a>
                         </td>
                     </tr>
                     {% empty %}
