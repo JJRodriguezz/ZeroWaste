@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mi Perfil | Zero Waste</title>
+    <link rel="stylesheet" href="{% static 'inventory/css/admin_dashboard.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+{% include 'navbar_admin.html' %}
+
+<main class="container py-5" style="margin-top: 100px;">
+    <h2 class="fw-bold mb-4 text-center">👤 Mi Perfil</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" class="row g-3">
+    {% csrf_token %}
+    <div class="col-md-6">
+        <label class="form-label">Nombre de usuario</label>
+        <input type="text" name="username" class="form-control" value="{{ user.username }}">
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Correo electrónico</label>
+        <input type="email" name="email" class="form-control" value="{{ user.email }}">
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Nombre</label>
+        <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Apellido</label>
+        <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
+    </div>
+
+    <div class="col-12 text-center">
+            <button type="submit" class="btn btn-success">Guardar cambios</button>
+            <a href="{% url 'cambiar_contrasena' %}" class="btn btn-outline-primary ms-3">Cambiar contraseña</a>
+        </div>
+</form>
+
+</main>
+</body>
+</html>
