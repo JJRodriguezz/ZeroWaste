@@ -14,12 +14,12 @@
             <a href="{% url 'admin_dashboard' %}">🏠 Inicio</a>
             <a href="{% url 'agregar_prenda' %}"> Añadir Prenda</a>
             <a href="{% url 'ver_inventario' %}"> Inventario</a>
-            <a href="#"> Ventas</a>
-            <a href="#"> Estadísticas</a>
+            <a href="{% url 'ver_ventas' %}"> Ventas</a>
+            <a href="{% url 'estadisticas' %}"> Estadísticas</a>
         </nav>
 
         <div class="admin-icons">
-            <a href="{% url 'home' %}">Cerrar sesión 🚪</a>
+            <a href="{% url 'logout' %}">Cerrar sesión 🚪</a>
         </div>
     </div>
 </header>
