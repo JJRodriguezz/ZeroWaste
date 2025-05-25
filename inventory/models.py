@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 # Create your models here.
 
@@ -34,7 +35,7 @@ class Prenda(models.Model):
     disponible = models.BooleanField(default=True)
     imagen = models.ImageField(upload_to='prendas/')
     fecha_agregado = models.DateTimeField(auto_now_add=True)
-
+    fecha_venta = models.DateTimeField(null=True, blank=True)
     # NUEVA RELACIÓN
     subcategoria = models.ForeignKey(Subcategoria, on_delete=models.SET_NULL, null=True)
 

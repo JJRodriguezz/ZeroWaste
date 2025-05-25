@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'inventory',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +73,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'zerowaste_db',
         'USER': 'postgres',
-        'PASSWORD': '12345678',
+        'PASSWORD': '123456',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -109,6 +110,10 @@ USE_I18N = True
 
 USE_TZ = True
 
+# Redirección después del login exitoso
+LOGIN_URL = '/users/login/'  # Página de login si no está autenticado
+LOGIN_REDIRECT_URL = '/admin-dashboard/'  # A dónde va después de iniciar sesión
+LOGOUT_REDIRECT_URL = '/users/login/'  # A dónde va después de cerrar sesión
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
