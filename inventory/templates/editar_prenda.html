@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Prenda | Zero Waste</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="{% static 'inventory/css/admin_dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'inventory/css/agregar_prenda.css' %}">
+</head>
+<body>
+
+    {% include 'navbar_admin.html' %}
+
+    <main class="container-fluid px-4 py-5">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10 col-lg-10">
+                <div class="card shadow">
+                    <div class="card-header text-white encabezado-formulario">
+                        <h4 class="mb-0 text-center">Editar Prenda</h4>
+                    </div>
+                    <div class="card-body cuerpo-formulario">
+                        <form method="POST" enctype="multipart/form-data">
+                            {% csrf_token %}
+
+                            <div class="mb-3">
+                                <label class="form-label">{{ form.nombre.label }}</label>
+                                {{ form.nombre }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">{{ form.descripcion.label }}</label>
+                                {{ form.descripcion }}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">{{ form.talla.label }}</label>
+                                    {{ form.talla }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">{{ form.precio.label }}</label>
+                                    {{ form.precio }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">{{ form.estado.label }}</label>
+                                {{ form.estado }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">{{ form.imagen.label }}</label><br>
+                                {% if prenda.imagen %}
+                                    <img src="{{ prenda.imagen.url }}" width="150" class="mb-2"><br>
+                                {% endif %}
+                                {{ form.imagen }}
+                            </div>
+
+                            <!-- Categoría -->
+                            <div class="mb-3">
+                                <label class="form-label">{{ form.categoria.label }}</label>
+                                {{ form.categoria }}
+                            </div>
+
+                            <!-- Subcategoría -->
+                            <div class="mb-3">
+                                <label class="form-label">Subcategoría</label>
+                                <select name="subcategoria" id="id_subcategoria" class="form-select">
+                                    {% for sub in subcategorias %}
+                                        <option value="{{ sub.id }}" data-categoria="{{ sub.categoria.id }}"
+                                            {% if sub.id == prenda.subcategoria.id %}selected{% endif %}>
+                                            {{ sub.nombre }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn boton-guardar">Guardar cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Script para subcategorías dinámicas -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const categoriaSelect = document.getElementById('categoria-select');
+            const subcategoriaSelect = document.getElementById('id_subcategoria');
+            const allOptions = Array.from(subcategoriaSelect.options);
+
+            categoriaSelect.addEventListener('change', function () {
+                const selectedCategoriaId = this.value;
+                subcategoriaSelect.innerHTML = '';
+                allOptions.forEach(opt => {
+                    if (opt.getAttribute('data-categoria') === selectedCategoriaId) {
+                        subcategoriaSelect.appendChild(opt);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
