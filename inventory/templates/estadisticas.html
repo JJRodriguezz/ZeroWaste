@@ -1,11 +1,12 @@
-{% load static %}
+{% load static humanize %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Estadísticas de Ventas | Zero Waste</title>
+    <title>Estadísticas | Zero Waste</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="{% static 'inventory/css/admin_dashboard.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .chart-container {
             max-width: 900px;
@@ -15,86 +16,78 @@
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
-        h2 { text-align: center; margin-top: 60px; }
+        body {
+            background-color: #f3eee8;
+        }
+
     </style>
 </head>
 <body>
-    {% include 'navbar_admin.html' %}
+{% include 'navbar_admin.html' %}
+<main class="container">
+    <h2 class="text-center mt-4">📊 Estadísticas Generales</h2>
 
-    <main class="container-fluid">
-        <h2>📊 Estadísticas de Ventas</h2>
-
-        <div class="chart-container">
-            <h5 class="text-center">Ventas por Subcategoría (💰)</h5>
-            <canvas id="subcategoriaChart"></canvas>
+    <!-- Tarjetas resumen -->
+    <div class="row text-center mb-5 mt-4 justify-content-center">
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm border-success">
+                <h6 class="text-muted">💵 Total Vendido</h6>
+                <h4 class="text-success">${{ total_ventas|floatformat:0|intcomma }}</h4>
+            </div>
         </div>
-
-        <div class="chart-container">
-            <h5 class="text-center">Ingresos por Fecha (📅)</h5>
-            <canvas id="fechaChart"></canvas>
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm border-warning">
+                <h6 class="text-muted">🧾 Ganancia de Proveedores</h6>
+                <h4 class="text-warning">${{ ganancia_proveedores|floatformat:0|intcomma }}</h4>
+            </div>
         </div>
-
-        <div class="chart-container">
-            <h5 class="text-center">Distribución por Categoría (🥧)</h5>
-            <canvas id="categoriaChart"></canvas>
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm border-danger">
+                <h6 class="text-muted">💰 Ganancia Zero Waste</h6>
+                <h4 class="text-danger">${{ ganancia_zero_waste|floatformat:0|intcomma }}</h4>
+            </div>
         </div>
-    </main>
+    </div>
 
-    <script>
-        // Gráfico de barras - Subcategoría
-        const subcatCtx = document.getElementById('subcategoriaChart').getContext('2d');
-        new Chart(subcatCtx, {
-            type: 'bar',
-            data: {
-                labels: [{% for item in ventas_subcat %}'{{ item.subcategoria__nombre }}',{% endfor %}],
-                datasets: [{
-                    label: 'Total vendido ($)',
-                    data: [{% for item in ventas_subcat %}{{ item.total|floatformat:0 }},{% endfor %}],
-                    backgroundColor: '#84c684'
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: { y: { beginAtZero: true } }
-            }
-        });
+    <!-- Botón para ver estadísticas filtradas -->
+    <div class="text-center mb-5">
+        <a href="{% url 'ver_estadisticas_filtradas' %}" class="btn btn-outline-dark btn-lg">
+            🔍 Ver estadísticas por categoría y rango
+        </a>
+    </div>
 
-        // Gráfico de línea - Fecha
-        const fechaCtx = document.getElementById('fechaChart').getContext('2d');
-        new Chart(fechaCtx, {
-            type: 'line',
-            data: {
-                labels: [{% for item in ventas_fecha %}'{{ item.fecha|date:"d/m" }}',{% endfor %}],
-                datasets: [{
-                    label: 'Ingresos por día',
-                    data: [{% for item in ventas_fecha %}{{ item.total|floatformat:0 }},{% endfor %}],
-                    borderColor: '#4a90e2',
-                    backgroundColor: 'rgba(74, 144, 226, 0.2)',
-                    fill: true,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: { y: { beginAtZero: true } }
-            }
-        });
+    <!-- Gráfica de ingresos por fecha -->
+    {% if ventas_fecha %}
+    <div class="chart-container">
+        <h5 class="text-center">Ingresos por Fecha (📅)</h5>
+        <canvas id="fechaChart"></canvas>
+    </div>
+    {% endif %}
+</main>
 
-        // Gráfico de pastel - Categoría
-        const catCtx = document.getElementById('categoriaChart').getContext('2d');
-        new Chart(catCtx, {
-            type: 'pie',
-            data: {
-                labels: [{% for item in ventas_categoria %}'{{ item.subcategoria__categoria__nombre }}',{% endfor %}],
-                datasets: [{
-                    data: [{% for item in ventas_categoria %}{{ item.total|floatformat:0 }},{% endfor %}],
-                    backgroundColor: ['#f9ca24', '#f0932b', '#eb4d4b', '#6ab04c', '#7ed6df']
-                }]
-            },
-            options: {
-                responsive: true
-            }
-        });
-    </script>
+<!-- SCRIPT PARA LA GRÁFICA -->
+<script>
+{% if ventas_fecha %}
+const fechaCtx = document.getElementById('fechaChart').getContext('2d');
+new Chart(fechaCtx, {
+    type: 'line',
+    data: {
+        labels: [{% for item in ventas_fecha %}'{{ item.fecha|date:"d/m" }}',{% endfor %}],
+        datasets: [{
+            label: 'Ingresos por día',
+            data: [{% for item in ventas_fecha %}{{ item.total|floatformat:0 }},{% endfor %}],
+            borderColor: '#2980b9',
+            backgroundColor: 'rgba(41, 128, 185, 0.2)',
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: { y: { beginAtZero: true } }
+    }
+});
+{% endif %}
+</script>
 </body>
 </html>

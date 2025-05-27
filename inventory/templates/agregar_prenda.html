@@ -27,6 +27,14 @@
                             {% csrf_token %}
 
                             <div class="mb-3">
+                                <label class="form-label">{{ form.codigo.label }}</label>
+                                {{ form.codigo }}
+                                {% if form.codigo.errors %}
+                                    <div class="text-danger small">{{ form.codigo.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
                                 <label class="form-label">{{ form.nombre.label }}</label>
                                 {{ form.nombre }}
                             </div>
@@ -35,22 +43,38 @@
                                 <label class="form-label">{{ form.descripcion.label }}</label>
                                 {{ form.descripcion }}
                             </div>
-
                             <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">{{ form.talla.label }}</label>
-                                    {{ form.talla }}
-                                </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.talla.label }}</label>
+                                {{ form.talla }}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.estado.label }}</label>
+                                {{ form.estado }}
+                            </div>
+
+                            </div>
+                            <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">{{ form.precio.label }}</label>
                                     {{ form.precio }}
                                 </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">{{ form.precio_proveedor.label }}</label>
+                                    {{ form.precio_proveedor }}
+                                </div>
+
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">{{ form.estado.label }}</label>
-                                {{ form.estado }}
+                                <label class="form-label">{{ form.nombre_proveedor.label }}</label>
+                                {{ form.nombre_proveedor }}
                             </div>
+
+
 
                             <div class="mb-3">
                                 <label class="form-label">{{ form.imagen.label }}</label>
@@ -107,7 +131,29 @@
             }
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const precioInput = document.getElementById('precio-proveedor-input');
 
+            if (precioInput) {
+                precioInput.addEventListener('input', function () {
+                    let rawValue = precioInput.value.replace(/[^\d]/g, '');
+                    if (rawValue) {
+                        const formatted = '$' + parseInt(rawValue, 10).toLocaleString('es-CO');
+                        precioInput.value = formatted;
+                    } else {
+                        precioInput.value = '';
+                    }
+                });
+
+                const form = precioInput.closest('form');
+                form.addEventListener('submit', function () {
+                    let cleanValue = precioInput.value.replace(/[^\d]/g, '');
+                    precioInput.value = cleanValue;
+                });
+            }
+        });
+    </script>
     <!-- SCRIPT PARA FILTRAR SUBCATEGORÍAS -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {

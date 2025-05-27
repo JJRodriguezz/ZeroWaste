@@ -6,10 +6,15 @@ import unicodedata, random
 from inventory.models import Subcategoria, Categoria
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
-from django.db.models import Sum, Count
+from django.db.models import Sum, F, ExpressionWrapper, DecimalField
 from django.utils import timezone
 from django.db.models.functions import TruncDate
+from django.contrib import messages
 import openpyxl
+from openpyxl.utils import get_column_letter
+from openpyxl.styles import Font
+from django.utils.timezone import localtime
+
 
 def normalizar(texto):
     """Normaliza el texto para búsquedas insensibles a tildes y mayúsculas"""
@@ -139,12 +144,27 @@ def marcar_como_vendida(request, prenda_id):
 def admin_dashboard(request):
     prendas_disponibles = Prenda.objects.filter(disponible=True).count()
     prendas_vendidas = Prenda.objects.filter(disponible=False).count()
-    total_ventas = sum([p.precio for p in Prenda.objects.filter(disponible=False)])
+
+    prendas_vendidas_qs = Prenda.objects.filter(disponible=False)
+
+    total_ventas = prendas_vendidas_qs.aggregate(total=Sum('precio'))['total'] or 0
+    total_inversion = prendas_vendidas_qs.aggregate(total=Sum('precio_proveedor'))['total'] or 0
+
+    ganancias_zero_waste = prendas_vendidas_qs.aggregate(
+        total=Sum(
+            ExpressionWrapper(
+                F('precio') - F('precio_proveedor'),
+                output_field=DecimalField()
+            )
+        )
+    )['total'] or 0
 
     return render(request, 'admin_dashboard.html', {
         'prendas_disponibles': prendas_disponibles,
         'prendas_vendidas': prendas_vendidas,
         'total_ventas': total_ventas,
+        'total_inversion': total_inversion,
+        'ganancias_zero_waste': ganancias_zero_waste,
     })
 
 @login_required
@@ -154,6 +174,15 @@ def agregar_prenda(request):
         if form.is_valid():
             prenda = form.save(commit=False)
             prenda.disponible = True  # Siempre disponible al registrarla
+
+            # 🔥 Asignar subcategoría seleccionada manualmente
+            subcategoria_id = request.POST.get('subcategoria')
+            if subcategoria_id:
+                try:
+                    prenda.subcategoria = Subcategoria.objects.get(id=subcategoria_id)
+                except Subcategoria.DoesNotExist:
+                    pass  # o puedes agregar un mensaje de error si quieres
+
             prenda.save()
             return redirect('admin_dashboard')
     else:
@@ -166,14 +195,24 @@ def agregar_prenda(request):
         'subcategorias': subcategorias
     })
 
-
+@login_required
 def editar_prenda(request, prenda_id):
     prenda = get_object_or_404(Prenda, id=prenda_id)
 
     if request.method == 'POST':
         form = PrendaForm(request.POST, request.FILES, instance=prenda)
         if form.is_valid():
-            form.save()
+            prenda = form.save(commit=False)
+
+            # 🔥 Asignar subcategoría manualmente
+            subcategoria_id = request.POST.get('subcategoria')
+            if subcategoria_id:
+                try:
+                    prenda.subcategoria = Subcategoria.objects.get(id=subcategoria_id)
+                except Subcategoria.DoesNotExist:
+                    pass
+
+            prenda.save()
             return redirect('ver_inventario')
     else:
         form = PrendaForm(instance=prenda)
@@ -186,64 +225,154 @@ def editar_prenda(request, prenda_id):
         'prenda': prenda,
     })
 
+
 @login_required
 def ver_inventario(request):
-    query_id = request.GET.get('buscar_id')
+    query_codigo = request.GET.get('buscar_codigo')
     prendas = Prenda.objects.filter(disponible=True).order_by('-fecha_agregado')
-    if query_id:
-        prendas = prendas.filter(id=query_id)
+    if query_codigo:
+        prendas = prendas.filter(codigo__icontains=query_codigo)
+    return render(request, 'ver_inventario.html', {'prendas': prendas})
 
     return render(request, 'ver_inventario.html', {'prendas': prendas})
 def exportar_ventas_excel(request):
-    prendas_vendidas = Prenda.objects.filter(disponible=False).order_by('-fecha_venta')
+    prendas_vendidas = Prenda.objects.filter(disponible=False)
 
-    # Crear archivo Excel
     wb = openpyxl.Workbook()
     ws = wb.active
-    ws.title = "Ventas"
+    ws.title = "Ventas Zero Waste"
 
     # Encabezados
-    headers = ["ID", "Nombre", "Talla", "Estado", "Precio", "Fecha Publicación", "Fecha Venta"]
-    ws.append(headers)
+    columnas = [
+        'Código', 'Nombre', 'Talla', 'Precio Venta', 'Precio Proveedor', 'Ganancia',
+        'Categoría', 'Subcategoría', 'Nombre Proveedor', 'Fecha de Venta'
+    ]
 
-    # Datos
+    ws.append(columnas)
+
+    # Estilo de encabezados
+    for col_num, col_title in enumerate(columnas, 1):
+        col_letter = get_column_letter(col_num)
+        ws[f'{col_letter}1'].font = Font(bold=True)
+
+    # Filas de datos
     for prenda in prendas_vendidas:
+        categoria = prenda.subcategoria.categoria.nombre if prenda.subcategoria and prenda.subcategoria.categoria else ''
+        subcategoria = prenda.subcategoria.nombre if prenda.subcategoria else ''
+        ganancia = prenda.precio - prenda.precio_proveedor
+
         ws.append([
-            prenda.id,
+            prenda.codigo,
             prenda.nombre,
             prenda.talla,
-            prenda.estado,
             float(prenda.precio),
-            prenda.fecha_agregado.strftime('%d/%m/%Y') if prenda.fecha_agregado else '',
-            prenda.fecha_venta.strftime('%d/%m/%Y %H:%M') if prenda.fecha_venta else ''
+            float(prenda.precio_proveedor),
+            float(ganancia),
+            categoria,
+            subcategoria,
+            prenda.nombre_proveedor,
+            localtime(prenda.fecha_venta).strftime('%d/%m/%Y') if prenda.fecha_venta else ''
+
         ])
 
-    # Preparar respuesta
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=ventas.xlsx'
-    wb.save(response)
+    # Ajuste de anchos
+    for column_cells in ws.columns:
+        length = max(len(str(cell.value)) for cell in column_cells)
+        ws.column_dimensions[column_cells[0].column_letter].width = length + 2
 
+    # Preparar la respuesta
+    response = HttpResponse(
+        content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    response['Content-Disposition'] = 'attachment; filename=ventas_zerowaste.xlsx'
+    wb.save(response)
     return response
 
 @login_required
 def ver_estadisticas(request):
-    # Solo prendas vendidas
     prendas_vendidas = Prenda.objects.filter(disponible=False)
 
-    # Ventas por subcategoría (para barras)
-    ventas_subcat = prendas_vendidas.values('subcategoria__nombre').annotate(total=Sum('precio')).order_by('-total')
+    ventas_fecha = prendas_vendidas.annotate(
+        fecha=TruncDate('fecha_venta')
+    ).values('fecha').annotate(total=Sum('precio')).order_by('fecha')
 
-    # Ventas por fecha (para línea)
-    ventas_fecha = prendas_vendidas.annotate(fecha=TruncDate('fecha_venta')).values('fecha').annotate(total=Sum('precio')).order_by('fecha')
-
-    # Ventas por categoría (para pastel)
-    ventas_categoria = prendas_vendidas.values('subcategoria__categoria__nombre').annotate(total=Sum('precio')).order_by('-total')
+    total_ventas = prendas_vendidas.aggregate(total=Sum('precio'))['total'] or 0
+    ganancia_proveedores = prendas_vendidas.aggregate(total=Sum('precio_proveedor'))['total'] or 0
+    ganancia_zero_waste = prendas_vendidas.aggregate(
+        total=Sum(ExpressionWrapper(F('precio') - F('precio_proveedor'), output_field=DecimalField()))
+    )['total'] or 0
 
     return render(request, 'estadisticas.html', {
-        'ventas_subcat': ventas_subcat,
         'ventas_fecha': ventas_fecha,
-        'ventas_categoria': ventas_categoria,
+        'total_ventas': total_ventas,
+        'ganancia_proveedores': ganancia_proveedores,
+        'ganancia_zero_waste': ganancia_zero_waste,
     })
+
+
+@login_required
+def ver_estadisticas_filtradas(request):
+    prendas_vendidas = Prenda.objects.filter(disponible=False)
+
+    # Filtros
+    desde = request.GET.get('desde')
+    hasta = request.GET.get('hasta')
+    grupo = request.GET.get('grupo')
+    categoria = request.GET.get('categoria')
+
+    if desde:
+        prendas_vendidas = prendas_vendidas.filter(fecha_venta__date__gte=desde)
+    if hasta:
+        prendas_vendidas = prendas_vendidas.filter(fecha_venta__date__lte=hasta)
+    if grupo:
+        prendas_vendidas = prendas_vendidas.filter(subcategoria__categoria__grupo__nombre=grupo)
+    if categoria:
+        prendas_vendidas = prendas_vendidas.filter(subcategoria__categoria__nombre=categoria)
+    # Filtrar categorías por grupo actual
+    if grupo:
+        categorias_filtradas = Categoria.objects.filter(grupo__nombre=grupo).order_by('nombre').distinct('nombre')
+    else:
+        categorias_filtradas = Categoria.objects.none()
+
+    # Gráficas
+    ventas_subcat = prendas_vendidas.values('subcategoria__nombre').annotate(total=Sum('precio')).order_by('-total')
+    ventas_categoria = prendas_vendidas.values('subcategoria__categoria__nombre').annotate(total=Sum('precio')).order_by('-total')
+    ventas_fecha = prendas_vendidas.annotate(
+        fecha=TruncDate('fecha_venta')
+    ).values('fecha').annotate(total=Sum('precio')).order_by('fecha')
+
+    # Totales
+    total_ventas = prendas_vendidas.aggregate(Sum('precio'))['precio__sum'] or 0
+    ganancia_proveedores = prendas_vendidas.aggregate(Sum('precio_proveedor'))['precio_proveedor__sum'] or 0
+    ganancia_zero_waste = prendas_vendidas.aggregate(
+        total=Sum(ExpressionWrapper(F('precio') - F('precio_proveedor'), output_field=DecimalField()))
+    )['total'] or 0
+
+    categorias = Categoria.objects.all()
+
+    return render(request, 'estadisticas_filtradas.html', {
+        'ventas_subcat': ventas_subcat,
+        'ventas_categoria': ventas_categoria,
+        'ventas_fecha': ventas_fecha,
+        'total_ventas': total_ventas,
+        'ganancia_proveedores': ganancia_proveedores,
+        'ganancia_zero_waste': ganancia_zero_waste,
+        'desde': desde,
+        'hasta': hasta,
+        'grupo': grupo,
+        'categoria': categoria,
+        'categorias': categorias_filtradas,
+
+    })
+
+
+
+@login_required
+def eliminar_prenda(request, prenda_id):
+    prenda = get_object_or_404(Prenda, id=prenda_id)
+    prenda.delete()
+    messages.success(request, "✅ La prenda fue eliminada exitosamente.")
+    return redirect('ver_inventario')
 
 # catalogoooo
 def catalogo_bebebodies(request):
@@ -551,12 +680,5 @@ def catalogo_mujerblusas(request):
     )
     return render(request, 'categorias/Mujer/Ropa(Mujer)/MujerBlusas.html', {'prendas': prendas})
 
-
-
-
-
-
-
-
-
-
+def about(request):
+    return render(request, 'about.html')

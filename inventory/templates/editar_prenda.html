@@ -25,7 +25,14 @@
                     <div class="card-body cuerpo-formulario">
                         <form method="POST" enctype="multipart/form-data">
                             {% csrf_token %}
-
+                            <div class="mb-3">
+                                <label class="form-label">{{ form.codigo.label }}</label>
+                                {{ form.codigo }}
+                                {% if form.codigo.errors %}
+                                    <div class="text-danger small">{{ form.codigo.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            
                             <div class="mb-3">
                                 <label class="form-label">{{ form.nombre.label }}</label>
                                 {{ form.nombre }}
@@ -46,6 +53,16 @@
                                     {{ form.precio }}
                                 </div>
                             </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.precio_proveedor.label }}</label>
+                                {{ form.precio_proveedor }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.nombre_proveedor.label }}</label>
+                                {{ form.nombre_proveedor }}
+                            </div>
+
 
                             <div class="mb-3">
                                 <label class="form-label">{{ form.estado.label }}</label>
@@ -88,6 +105,53 @@
             </div>
         </div>
     </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const precioInput = document.getElementById('precio-input');
+
+            if (precioInput) {
+                precioInput.addEventListener('input', function () {
+                    let rawValue = precioInput.value.replace(/[^\d]/g, '');
+                    if (rawValue) {
+                        const formatted = '$' + parseInt(rawValue, 10).toLocaleString('es-CO');
+                        precioInput.value = formatted;
+                    } else {
+                        precioInput.value = '';
+                    }
+                });
+
+                const form = precioInput.closest('form');
+                form.addEventListener('submit', function () {
+                    let cleanValue = precioInput.value.replace(/[^\d]/g, '');
+                    precioInput.value = cleanValue;
+                });
+            }
+        });
+    </script>
+
+    <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const precioInput = document.getElementById('precio-proveedor-input');
+
+                if (precioInput) {
+                    precioInput.addEventListener('input', function () {
+                        let rawValue = precioInput.value.replace(/[^\d]/g, '');
+                        if (rawValue) {
+                            const formatted = '$' + parseInt(rawValue, 10).toLocaleString('es-CO');
+                            precioInput.value = formatted;
+                        } else {
+                            precioInput.value = '';
+                        }
+                    });
+
+                    const form = precioInput.closest('form');
+                    form.addEventListener('submit', function () {
+                        let cleanValue = precioInput.value.replace(/[^\d]/g, '');
+                        precioInput.value = cleanValue;
+                    });
+                }
+            });
+        </script>
 
     <!-- Script para subcategorías dinámicas -->
     <script>
@@ -107,5 +171,6 @@
             });
         });
     </script>
+
 </body>
 </html>

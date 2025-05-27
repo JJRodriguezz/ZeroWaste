@@ -120,3 +120,7 @@ h2 {
     margin: 0 auto;
     text-align: center;
 }
+.encabezado-zero th {
+    background-color: #8aa83c !important;
+    color: white !important;
+}

@@ -1,6 +1,6 @@
 from django import forms
-from .models import Prenda
 from .models import Prenda, Categoria
+
 
 class PrendaForm(forms.ModelForm):
     categoria = forms.ModelChoiceField(
@@ -16,8 +16,13 @@ class PrendaForm(forms.ModelForm):
 
     class Meta:
         model = Prenda
-        fields = ['nombre', 'descripcion', 'talla', 'precio', 'estado', 'imagen', 'subcategoria'] 
+        fields = ['codigo', 'nombre', 'descripcion', 'talla', 'precio', 'precio_proveedor', 'nombre_proveedor', 'estado', 'imagen']
         widgets = {
+            'codigo': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ej: PRD-001',
+                'title': 'Código único para la prenda (ej: PRD-001)'
+            }),
             'nombre': forms.TextInput(attrs={
                 'class': 'form-control',
                 'title': 'Escribe el nombre de la prenda, por ejemplo: Camiseta blanca',
@@ -37,6 +42,17 @@ class PrendaForm(forms.ModelForm):
                 'inputmode': 'numeric',
                 'id': 'precio-input'
             }),
+            'precio_proveedor': forms.TextInput(attrs={
+                'class': 'form-control',
+                'title': 'Precio que costó al proveedor (ej: $10000)',
+                'inputmode': 'numeric',
+                'id': 'precio-proveedor-input'
+            }),
+            'nombre_proveedor': forms.TextInput(attrs={
+                'class': 'form-control',
+                'title': 'Nombre del proveedor',
+                'placeholder': 'Ej: María López'
+            }),
             'estado': forms.TextInput(attrs={
                 'class': 'form-control',
                 'title': 'Ej: Como nueva, Usada en buen estado...',
@@ -45,8 +61,20 @@ class PrendaForm(forms.ModelForm):
                 'class': 'form-control',
                 'title': 'Selecciona una imagen de la prenda',
             }),
-
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+    def clean_codigo(self):
+        codigo = self.cleaned_data['codigo']
+        qs = Prenda.objects.filter(codigo=codigo)
+
+        # Excluir la prenda actual si estamos editando
+        if self.instance.pk:
+            qs = qs.exclude(pk=self.instance.pk)
+
+        if qs.exists():
+            raise forms.ValidationError("⚠️ Ya existe una prenda con este código.")
+
+        return codigo

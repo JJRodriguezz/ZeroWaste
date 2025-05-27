@@ -26,11 +26,14 @@ class Subcategoria(models.Model):
         return f"{self.nombre} ({self.categoria.nombre} - {self.categoria.grupo.nombre})"
 
 class Prenda(models.Model):
+    codigo = models.CharField(max_length=20, unique=True)  # nuevo campo para ID personalizada
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
     talla = models.CharField(max_length=10)
     precio = models.DecimalField(max_digits=8, decimal_places=2)
+    precio_proveedor = models.DecimalField(max_digits=8, decimal_places=2, default=0)  # Precio de compra
+    nombre_proveedor = models.CharField(max_length=100, blank=True)  # Nombre del proveedor
     estado = models.CharField(max_length=50)
     disponible = models.BooleanField(default=True)
     imagen = models.ImageField(upload_to='prendas/')
@@ -40,4 +43,4 @@ class Prenda(models.Model):
     subcategoria = models.ForeignKey(Subcategoria, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        return self.nombre
+        return self.codigo

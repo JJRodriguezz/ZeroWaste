@@ -13,11 +13,13 @@ urlpatterns = [
     path('estadisticas/', views.ver_estadisticas, name='estadisticas'),
     path('users/', include('users.urls')),
     path('catalogo/recientes/', views.catalogo_recientes, name='catalogo_recientes'),
+    path('estadisticas/filtradas/', views.ver_estadisticas_filtradas, name='ver_estadisticas_filtradas'),
 
     path('contacto/', views.contacto, name='contacto'),
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('agregar-prenda/', views.agregar_prenda, name='agregar_prenda'),
     path('inventario/', views.ver_inventario, name='ver_inventario'),
+    path('eliminar/<int:prenda_id>/', views.eliminar_prenda, name='eliminar_prenda'), #Eliminar prenda
 
     #catalogooo
     path('catalogo/bebe/bodies', views.catalogo_bebebodies, name='catalogo_bebebodies'),
@@ -54,4 +56,5 @@ urlpatterns = [
     path('catalogo/mujer/camisas', views.catalogo_mujercamisas, name='catalogo_mujercamisas'),
     path('catalogo/mujer/chaquetas', views.catalogo_mujerchaquetas, name='catalogo_mujerchaquetas'),
     path('catalogo/mujer/blusas', views.catalogo_mujerblusas, name='catalogo_mujerblusas'),
+    path('/about', views.about, name='about'),
 ]
