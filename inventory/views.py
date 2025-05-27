@@ -6,10 +6,10 @@ import unicodedata, random
 from inventory.models import Subcategoria, Categoria
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
-from django.db.models import Sum, Count
+from django.db.models import Sum
 from django.utils import timezone
 from django.db.models.functions import TruncDate
-import openpyxl
+from django.contrib import messages
 
 def normalizar(texto):
     """Normaliza el texto para búsquedas insensibles a tildes y mayúsculas"""
@@ -188,10 +188,11 @@ def editar_prenda(request, prenda_id):
 
 @login_required
 def ver_inventario(request):
-    query_id = request.GET.get('buscar_id')
+    query_codigo = request.GET.get('buscar_codigo')
     prendas = Prenda.objects.filter(disponible=True).order_by('-fecha_agregado')
-    if query_id:
-        prendas = prendas.filter(id=query_id)
+    if query_codigo:
+        prendas = prendas.filter(codigo__icontains=query_codigo)
+    return render(request, 'ver_inventario.html', {'prendas': prendas})
 
     return render(request, 'ver_inventario.html', {'prendas': prendas})
 def exportar_ventas_excel(request):
@@ -244,6 +245,13 @@ def ver_estadisticas(request):
         'ventas_fecha': ventas_fecha,
         'ventas_categoria': ventas_categoria,
     })
+
+@login_required
+def eliminar_prenda(request, prenda_id):
+    prenda = get_object_or_404(Prenda, id=prenda_id)
+    prenda.delete()
+    messages.success(request, "✅ La prenda fue eliminada exitosamente.")
+    return redirect('ver_inventario')
 
 # catalogoooo
 def catalogo_bebebodies(request):
@@ -550,13 +558,3 @@ def catalogo_mujerblusas(request):
         disponible=True
     )
     return render(request, 'categorias/Mujer/Ropa(Mujer)/MujerBlusas.html', {'prendas': prendas})
-
-
-
-
-
-
-
-
-
-
