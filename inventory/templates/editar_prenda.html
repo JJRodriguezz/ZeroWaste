@@ -54,6 +54,16 @@
                                 </div>
                             </div>
 
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.precio_proveedor.label }}</label>
+                                {{ form.precio_proveedor }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">{{ form.nombre_proveedor.label }}</label>
+                                {{ form.nombre_proveedor }}
+                            </div>
+
+
                             <div class="mb-3">
                                 <label class="form-label">{{ form.estado.label }}</label>
                                 {{ form.estado }}
@@ -95,6 +105,53 @@
             </div>
         </div>
     </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const precioInput = document.getElementById('precio-input');
+
+            if (precioInput) {
+                precioInput.addEventListener('input', function () {
+                    let rawValue = precioInput.value.replace(/[^\d]/g, '');
+                    if (rawValue) {
+                        const formatted = '$' + parseInt(rawValue, 10).toLocaleString('es-CO');
+                        precioInput.value = formatted;
+                    } else {
+                        precioInput.value = '';
+                    }
+                });
+
+                const form = precioInput.closest('form');
+                form.addEventListener('submit', function () {
+                    let cleanValue = precioInput.value.replace(/[^\d]/g, '');
+                    precioInput.value = cleanValue;
+                });
+            }
+        });
+    </script>
+
+    <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const precioInput = document.getElementById('precio-proveedor-input');
+
+                if (precioInput) {
+                    precioInput.addEventListener('input', function () {
+                        let rawValue = precioInput.value.replace(/[^\d]/g, '');
+                        if (rawValue) {
+                            const formatted = '$' + parseInt(rawValue, 10).toLocaleString('es-CO');
+                            precioInput.value = formatted;
+                        } else {
+                            precioInput.value = '';
+                        }
+                    });
+
+                    const form = precioInput.closest('form');
+                    form.addEventListener('submit', function () {
+                        let cleanValue = precioInput.value.replace(/[^\d]/g, '');
+                        precioInput.value = cleanValue;
+                    });
+                }
+            });
+        </script>
 
     <!-- Script para subcategorías dinámicas -->
     <script>
@@ -114,5 +171,6 @@
             });
         });
     </script>
+
 </body>
 </html>
