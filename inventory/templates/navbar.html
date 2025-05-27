@@ -104,9 +104,7 @@
                 </div>
             </div>
             
-            <!-- ABOUT US -->
-            <span> | </span>
-            <a href="{% url 'about' %}">Sobre Nosotros</a>
+
 
 
         </nav>
@@ -164,9 +162,13 @@
 
         <!-- Overlay para fondo oscuro -->
         <div class="search-overlay"></div>
+    <!-- ABOUT US -->
 
         <div class="icons">
-            <a href="#"><img width="20" height="20" src="https://img.icons8.com/ios/50/about-us-male.png" alt="perfil"/></a>
+
+            <a href="{% url 'about' %}"><img width="20" height="20" src="https://img.icons8.com/ios/50/about-us-male.png" alt="perfil"/></a>
+            <p>Sobre nosotros</p>
+
         </div>
     </div>
 </header>
@@ -222,6 +224,13 @@
     .search-input-large:focus {
         border-color: #2c3e50;
         box-shadow: 0 0 0 2px rgba(44,62,80,0.1);
+    }
+
+    .icons{
+        text-align: center;
+    line-height: 0;
+    font-size: 10px;
+    display: inline-block;
     }
 
     .search-sections {
@@ -449,6 +458,8 @@
         border: none;
         cursor: pointer;
     }
+
+
 </style>
 
 <script>
