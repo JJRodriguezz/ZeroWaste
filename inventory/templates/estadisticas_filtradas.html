@@ -1,0 +1,165 @@
+{% load static humanize %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Estadísticas Filtradas | Zero Waste</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="{% static 'inventory/css/admin_dashboard.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .chart-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        body {
+            background-color: #f3eee8;
+        }
+
+    </style>
+</head>
+<body>
+{% include 'navbar_admin.html' %}
+<main class="container">
+    <h2 class="text-center mt-4">📊 Estadísticas Filtradas</h2>
+
+    <!-- Filtros -->
+    <form method="get" class="row g-3 mt-4 mb-5">
+        <div class="col-md-3">
+            <label>Desde</label>
+            <input type="date" name="desde" class="form-control" value="{{ desde }}">
+        </div>
+        <div class="col-md-3">
+            <label>Hasta</label>
+            <input type="date" name="hasta" class="form-control" value="{{ hasta }}">
+        </div>
+        <div class="col-md-3">
+            <label>Grupo</label>
+            <select name="grupo" class="form-select">
+                <option value="">Todos</option>
+                <option value="Mujer" {% if grupo == "Mujer" %}selected{% endif %}>Mujer</option>
+                <option value="Hombre" {% if grupo == "Hombre" %}selected{% endif %}>Hombre</option>
+                <option value="Niño" {% if grupo == "Niño" %}selected{% endif %}>Niño</option>
+                <option value="Bebé" {% if grupo == "Bebé" %}selected{% endif %}>Bebé</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label>Categoría</label>
+            <select name="categoria" class="form-select">
+                <option value="">Todas</option>
+                {% for cat in categorias %}
+                    <option value="{{ cat.nombre }}" {% if cat.nombre == categoria %}selected{% endif %}>
+                        {{ cat.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary mt-3">Filtrar</button>
+        </div>
+    </form>
+
+    <!-- Tarjetas resumen -->
+    <div class="row text-center mb-5">
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm border-success">
+                <h6 class="text-muted">💵 Total Vendido</h6>
+                <h4 class="text-success">${{ total_ventas|floatformat:0|intcomma }}</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm border-warning">
+                <h6 class="text-muted">🧾 Ganancia Proveedores</h6>
+                <h4 class="text-warning">${{ ganancia_proveedores|floatformat:0|intcomma }}</h4>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-3 shadow-sm border-danger">
+                <h6 class="text-muted">💰 Ganancia Zero Waste</h6>
+                <h4 class="text-danger">${{ ganancia_zero_waste|floatformat:0|intcomma }}</h4>
+            </div>
+        </div>
+    </div>
+
+    {% if ventas_subcat %}
+    <div class="chart-container">
+        <h5 class="text-center">Ventas por Subcategoría</h5>
+        <canvas id="subcatChart"></canvas>
+    </div>
+    {% endif %}
+
+    {% if ventas_categoria %}
+    <div class="chart-container">
+        <h5 class="text-center">Distribución por Categoría</h5>
+        <canvas id="categoriaChart"></canvas>
+    </div>
+    {% endif %}
+
+    {% if ventas_fecha %}
+    <div class="chart-container">
+        <h5 class="text-center">Ingresos por Fecha</h5>
+        <canvas id="fechaChart"></canvas>
+    </div>
+    {% endif %}
+</main>
+
+<script>
+// Subcategoría
+{% if ventas_subcat %}
+const subcatCtx = document.getElementById('subcatChart').getContext('2d');
+new Chart(subcatCtx, {
+    type: 'bar',
+    data: {
+        labels: [{% for item in ventas_subcat %}'{{ item.subcategoria__nombre }}',{% endfor %}],
+        datasets: [{
+            label: 'Ventas ($)',
+            data: [{% for item in ventas_subcat %}{{ item.total|floatformat:0 }},{% endfor %}],
+            backgroundColor: '#4caf50'
+        }]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+});
+{% endif %}
+
+// Categoría
+{% if ventas_categoria %}
+const catCtx = document.getElementById('categoriaChart').getContext('2d');
+new Chart(catCtx, {
+    type: 'pie',
+    data: {
+        labels: [{% for item in ventas_categoria %}'{{ item.subcategoria__categoria__nombre }}',{% endfor %}],
+        datasets: [{
+            data: [{% for item in ventas_categoria %}{{ item.total|floatformat:0 }},{% endfor %}],
+            backgroundColor: ['#f39c12', '#3498db', '#e74c3c', '#2ecc71', '#9b59b6']
+        }]
+    },
+    options: { responsive: true }
+});
+{% endif %}
+
+// Fecha
+{% if ventas_fecha %}
+const fechaCtx = document.getElementById('fechaChart').getContext('2d');
+new Chart(fechaCtx, {
+    type: 'line',
+    data: {
+        labels: [{% for item in ventas_fecha %}'{{ item.fecha|date:"d/m" }}',{% endfor %}],
+        datasets: [{
+            label: 'Ingresos por día',
+            data: [{% for item in ventas_fecha %}{{ item.total|floatformat:0 }},{% endfor %}],
+            borderColor: '#2980b9',
+            backgroundColor: 'rgba(41, 128, 185, 0.2)',
+            fill: true,
+            tension: 0.3
+        }]
+    },
+    options: { responsive: true, scales: { y: { beginAtZero: true } } }
+});
+{% endif %}
+</script>
+</body>
+</html>
