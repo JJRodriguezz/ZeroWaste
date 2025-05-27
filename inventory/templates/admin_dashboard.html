@@ -1,4 +1,4 @@
-{% load static %}
+{% load static humanize %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -6,6 +6,13 @@
     <title>Panel de Administración | Zero Waste</title>
     <link rel="stylesheet" href="{% static 'inventory/css/admin_dashboard.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+
+        body {
+            background-color: #f3eee8;
+        }
+
+    </style>
 </head>
 <body>
 
@@ -17,31 +24,48 @@
     <p class="text-muted mb-5">Este es tu resumen de actividad en Zero Waste.</p>
 
     <div class="row justify-content-center g-4">
-        <div class="col-md-5">
-            <div class="card shadow h-100">
-                <div class="card-body">
-                    <h5 class="card-title text-success">Prendas en inventario</h5>
-                    <p class="display-6 fw-bold">{{ prendas_disponibles }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-5">
-            <div class="card shadow h-100">
-                <div class="card-body">
-                    <h5 class="card-title text-success">Prendas vendidas</h5>
-                    <p class="display-6 fw-bold">{{ prendas_vendidas }}</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-5">
-            <div class="card shadow h-200">
-                <div class="card-body">
-                    <h5 class="card-title text-success">Ganancias totales</h5>
-                    <p class="display-6 fw-bold">${{ total_ventas|floatformat:0 }}</p>
-                </div>
+    <div class="col-md-5 col-lg-4">
+        <div class="card shadow h-100 border-start border-primary border-4">
+            <div class="card-body">
+                <h6 class="text-muted">📦 Prendas en inventario</h6>
+                <h4 class="fw-bold">{{ prendas_disponibles }}</h4>
             </div>
         </div>
     </div>
+    <div class="col-md-5 col-lg-4">
+        <div class="card shadow h-100 border-start border-success border-4">
+            <div class="card-body">
+                <h6 class="text-muted">🛍️ Prendas vendidas</h6>
+                <h4 class="fw-bold">{{ prendas_vendidas }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5 col-lg-4">
+        <div class="card shadow h-100 border-start border-info border-4">
+            <div class="card-body">
+                <h6 class="text-muted">💸 Total vendido</h6>
+                <h4 class="fw-bold">${{ total_ventas|floatformat:0|intcomma }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5 col-lg-4">
+        <div class="card shadow h-100 border-start border-warning border-4">
+            <div class="card-body">
+                <h6 class="text-muted">📦 Ganancia Proveedores</h6>
+                <h4 class="fw-bold">${{ total_inversion|floatformat:0|intcomma }}</h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-5 col-lg-4">
+        <div class="card shadow h-100 border-start border-danger border-4">
+            <div class="card-body">
+                <h6 class="text-muted">💰 Ganancia ZeroWaste</h6>
+                <h4 class="fw-bold">${{ ganancias_zero_waste|floatformat:0|intcomma }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
 </main>
 
 </body>
