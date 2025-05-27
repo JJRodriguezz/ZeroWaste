@@ -18,6 +18,7 @@ urlpatterns = [
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('agregar-prenda/', views.agregar_prenda, name='agregar_prenda'),
     path('inventario/', views.ver_inventario, name='ver_inventario'),
+    path('eliminar/<int:prenda_id>/', views.eliminar_prenda, name='eliminar_prenda'), #Eliminar prenda
 
     #catalogooo
     path('catalogo/bebe/bodies', views.catalogo_bebebodies, name='catalogo_bebebodies'),
