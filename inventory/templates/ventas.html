@@ -12,7 +12,7 @@
 {% include 'navbar_admin.html' %}
 
 <main class="container-fluid px-5 py-5">
-    <h2 class="text-center mb-4">💸 Prendas Vendidas</h2>
+    <h2 class="text-center mb-4"> Prendas Vendidas</h2>
     <form method="get" class="row mb-4">
         <div class="col-md-2">
             <label>Desde:</label>
@@ -70,10 +70,10 @@
 
     <div class="table-responsive">
         <table class="table table-bordered table-hover align-middle">
-            <thead class="table-danger text-center">
+            <thead class="encabezado-zero text-center">
                 <tr>
-                    <th>ID</th>
-                    <th>Imagen</th>
+                    <th>Código</th>
+                    <th>Imágen</th>
                     <th>Nombre</th>
                     <th>Talla</th>
                     <th>Estado</th>
@@ -86,7 +86,7 @@
             <tbody>
                 {% for prenda in prendas %}
                 <tr>
-                    <td class="text-center fw-bold">{{ prenda.id }}</td>
+                    <td class="text-center fw-bold">{{ prenda.codigo }}</td>
                     <td class="text-center">
                         {% if prenda.imagen %}
                             <img src="{{ prenda.imagen.url }}" alt="{{ prenda.nombre }}" width="100">
