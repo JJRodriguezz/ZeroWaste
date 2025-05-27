@@ -16,22 +16,21 @@
 
     <main class="container-fluid px-5 py-5">
         <h2 class="text-center mb-4">📦 Inventario de Prendas</h2>
-        <form method="get" class="row mb-4">
-            <div class="text-center mb-4">
-                <input type="number" name="buscar_id" class="form-control text-center" placeholder="Buscar por ID" value="{{ request.GET.buscar_id }}">
+        <form method="get" class="row justify-content-center gx-1 mb-4">
+            <div class="col-md-7 col-sm-12 mb-2 mb-md-0">
+                <input type="text" name="buscar_codigo" class="form-control text-center" placeholder="Buscar por código" value="{{ request.GET.buscar_codigo }}">
             </div>
-            <div class="text-center">
-                <button type="submit" class="btn btn-success">Buscar</button>
+            <div class="col-md-2 col-sm-12">
+                <button type="submit" class="btn btn-success w-200">Buscar</button>
             </div>
         </form>
-
 
         <div class="table-responsive">
             <table class="table table-bordered table-hover align-middle">
                 <thead class="table-success text-center">
                     <tr>
-                        <th>ID</th>
-                        <th>Imagen</th>
+                        <th>Código</th>
+                        <th>Imágen</th>
                         <th>Nombre</th>
                         <th>Talla</th>
                         <th>Estado</th>
@@ -43,7 +42,7 @@
                 <tbody>
                     {% for prenda in prendas %}
                     <tr>
-                        <td class="text-center fw-bold">{{ prenda.id }}</td>
+                        <td class="text-center fw-bold">{{ prenda.codigo }}</td>
                         <td class="text-center">
                             {% if prenda.imagen %}
                                 <img src="{{ prenda.imagen.url }}" alt="{{ prenda.nombre }}" width="150">
@@ -53,15 +52,28 @@
                         </td>
                         <td>{{ prenda.nombre }}</td>
                         <td class="text-center">{{ prenda.talla }}</td>
-                        <td>{{ prenda.estado }}</td>
+                        <td class="text-center align-middle">
+                            <span class="badge 
+                                {% if 'nuev' in prenda.estado|lower %} bg-success 
+                                {% elif 'usado' in prenda.estado|lower %} bg-warning text-dark 
+                                {% elif 'dañado' in prenda.estado|lower or 'mancha' in prenda.estado|lower %} bg-danger 
+                                {% else %} bg-secondary 
+                                {% endif %}">
+                                {{ prenda.estado }}
+                            </span>
+                        </td>
                         <td class="text-end">${{ prenda.precio|floatformat:0|intcomma }}</td>
                         <td class="text-center">{{ prenda.fecha_agregado|date:"d/m/Y" }}</td>
                         <td class="text-center">
-                            <a href="{% url 'editar_prenda' prenda.id %}" class="btn btn-sm btn-outline-primary">Editar</a>
-                            <a href="{% url 'marcar_como_vendida' prenda.id %}" class="btn btn-sm btn-outline-danger">
-                                Marcar como vendida
+                        <div class="d-flex flex-column align-items-center gap-2">
+                            <a href="{% url 'editar_prenda' prenda.id %}" class="btn btn-sm btn-outline-edit w-100">Editar</a>
+                            <a href="{% url 'marcar_como_vendida' prenda.id %}" class="btn btn-sm btn-outline-primary w-100">Marcar como vendida</a>
+                            <a href="{% url 'eliminar_prenda' prenda.id %}" class="btn btn-sm btn-outline-danger w-100"
+                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta prenda? Esta acción no se puede deshacer.')">
+                            Eliminar
                             </a>
-                        </td>
+                        </div>
+                    </td>
                     </tr>
                     {% empty %}
                     <tr><td colspan="8" class="text-center">No hay prendas registradas.</td></tr>
