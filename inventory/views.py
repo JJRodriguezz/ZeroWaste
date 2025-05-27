@@ -21,7 +21,7 @@ def normalizar(texto):
     texto = str(texto).lower()
     return ''.join(c for c in unicodedata.normalize('NFD', texto) if unicodedata.category(c) != 'Mn')
 
-@login_required
+
 def lista_prendas(request):
     query = request.GET.get('q', '').strip()
     prendas = Prenda.objects.filter(disponible=True)
@@ -204,11 +204,12 @@ def editar_prenda(request, prenda_id):
         if form.is_valid():
             prenda = form.save(commit=False)
 
-            # 🔥 Asignar subcategoría manualmente
+            # ✅ Asignar subcategoría solo si cambia
             subcategoria_id = request.POST.get('subcategoria')
             if subcategoria_id:
                 try:
-                    prenda.subcategoria = Subcategoria.objects.get(id=subcategoria_id)
+                    subcat = Subcategoria.objects.get(id=subcategoria_id)
+                    prenda.subcategoria = subcat
                 except Subcategoria.DoesNotExist:
                     pass
 
@@ -224,6 +225,7 @@ def editar_prenda(request, prenda_id):
         'subcategorias': subcategorias,
         'prenda': prenda,
     })
+
 
 
 @login_required
