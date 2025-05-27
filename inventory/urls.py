@@ -56,4 +56,5 @@ urlpatterns = [
     path('catalogo/mujer/camisas', views.catalogo_mujercamisas, name='catalogo_mujercamisas'),
     path('catalogo/mujer/chaquetas', views.catalogo_mujerchaquetas, name='catalogo_mujerchaquetas'),
     path('catalogo/mujer/blusas', views.catalogo_mujerblusas, name='catalogo_mujerblusas'),
+    path('/about', views.about, name='about'),
 ]

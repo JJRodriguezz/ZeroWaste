@@ -679,3 +679,6 @@ def catalogo_mujerblusas(request):
         disponible=True
     )
     return render(request, 'categorias/Mujer/Ropa(Mujer)/MujerBlusas.html', {'prendas': prendas})
+
+def about(request):
+    return render(request, 'about.html')

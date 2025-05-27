@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+{% include 'navbar.html' %}
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sobre nosotros - Zero Waste</title>
+    <link rel="stylesheet" href="{% static 'inventory/css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'inventory/css/about.css' %}">
+</head>
+<body>
+
+<div class="about-container">
+
+    <h1 class="about-title">Sobre nosotros</h1>
+
+    <!-- Historia -->
+    <div class="section">
+        <div class="section-text">
+            <h2>Nuestra historia</h2>
+            <p><strong>Zero Waste, Moda Circular</strong> nació en Medellín en 2022, cuando nuestra fundadora Diana Pineda comenzó a vender su ropa en un grupo de WhatsApp. Con el tiempo, el proyecto creció y se convirtió en un marketplace sostenible donde personas de toda Colombia pueden comprar y vender prendas en excelente estado, fomentando un consumo más consciente.</p>
+        </div>
+        <div class="section-image">
+            <img src="{% static 'inventory/img/about-banner.jpg' %}" alt="Historia Zero Waste">
+        </div>
+    </div>
+
+    <!-- Misión y Visión lado a lado -->
+<div class="section">
+    <div class="section-text">
+        <h2>Misión</h2>
+        <p>Fomentar un consumo consciente y sostenible a través de un marketplace donde las personas puedan comprar y vender prendas y artículos en excelente estado. Nos encargamos de la promoción, logística y distribución para que cada prenda tenga una segunda oportunidad.</p>
+    </div>
+    <div class="section-text">
+        <h2>Visión</h2>
+        <p>Ser el marketplace líder en moda circular en Colombia, promoviendo una comunidad sostenible donde la moda y la economía circular sean accesibles para todos.</p>
+    </div>
+</div>
+
+<!-- Qué hacemos por ti + comisión -->
+<div class="section reverse">
+    <div class="section-image">
+        <img src="{% static 'inventory/img/equipo.jpg' %}" alt="Impacto">
+    </div>
+    <div class="section-text">
+        <h2>¿Qué hacemos por ti?</h2>
+        <p><strong>✔ Promoción y Publicidad:</strong> Publicamos tus prendas con fotos y videos en nuestras redes sociales.</p>
+        <p><strong>✔ Inversión Estratégica:</strong> Cubrimos marketing, almacenamiento y logística para que lleguen a más personas.</p>
+        <p><strong>✔ Logística Integral:</strong> Nos encargamos del empaque, etiquetado y entrega para una experiencia impecable.</p>
+        <p><strong>✔ Participación en Ferias:</strong> Mostramos tus productos en eventos locales y ferias.</p>
+        <p><strong>✔ Impacto Social:</strong> Las prendas sin dueño pasan a fundaciones, dándoles una segunda vida.</p>
+
+        <h3 style="margin-top: 30px; color: #758D2E;">Transparencia en nuestra Comisión</h3>
+        <p>Nuestra comisión no es solo ganancia; de ella cubrimos todos los costos necesarios para ofrecerte este servicio integral y mantener nuestra misión de generar un impacto positivo en el planeta y la sociedad.</p>
+    </div>
+</div>
+        <!-- Botón de volver al inicio -->
+    <div class="back-button">
+        <a href="{% url 'home' %}">← Volver al inicio</a>
+    </div>
+</body>
+</html>
