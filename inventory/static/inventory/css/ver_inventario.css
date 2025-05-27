@@ -85,7 +85,7 @@ th:nth-child(5), td:nth-child(5) { /* Estado */
 
 th:nth-child(8), td:nth-child(8) { /* Acciones */
     width: 25%;
-    min-width: 200px;
+    min-width: 250px !important;
 }
 
 .table td span.badge {
