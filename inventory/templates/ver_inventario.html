@@ -35,6 +35,8 @@
                         <th>Talla</th>
                         <th>Estado</th>
                         <th>Precio</th>
+                        <th>Proveedor</th>
+                        <th>Costo</th>
                         <th>Fecha de publicación</th>
                         <th>Acciones</th>
                     </tr>
@@ -62,7 +64,9 @@
                                 {{ prenda.estado }}
                             </span>
                         </td>
-                        <td class="text-end">${{ prenda.precio|floatformat:0|intcomma }}</td>
+                        <td class="text-center">${{ prenda.precio|floatformat:0|intcomma }}</td>
+                        <td class="text-center">{{ prenda.nombre_proveedor }}</td>
+                        <td class="text-center">${{ prenda.precio_proveedor|floatformat:0|intcomma }}</td>
                         <td class="text-center">{{ prenda.fecha_agregado|date:"d/m/Y" }}</td>
                         <td class="text-center">
                         <div class="d-flex flex-column align-items-center gap-2">

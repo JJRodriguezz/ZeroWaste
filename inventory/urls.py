@@ -13,6 +13,7 @@ urlpatterns = [
     path('estadisticas/', views.ver_estadisticas, name='estadisticas'),
     path('users/', include('users.urls')),
     path('catalogo/recientes/', views.catalogo_recientes, name='catalogo_recientes'),
+    path('estadisticas/filtradas/', views.ver_estadisticas_filtradas, name='ver_estadisticas_filtradas'),
 
     path('contacto/', views.contacto, name='contacto'),
     path('admin-dashboard/', views.admin_dashboard, name='admin_dashboard'),
