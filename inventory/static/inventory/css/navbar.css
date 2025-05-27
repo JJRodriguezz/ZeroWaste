@@ -56,14 +56,6 @@
     border-radius: 4px;
 }
 
-/* ICONOS */
-.icons a {
-    margin-left: 15px;
-    font-size: 18px;
-    text-decoration: none;
-    color: black;
-}
-
 /* DROPDOWN SIMPLE */
 .dropdown {
     position: relative;
