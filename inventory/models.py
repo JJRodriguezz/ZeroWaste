@@ -32,6 +32,8 @@ class Prenda(models.Model):
     descripcion = models.TextField()
     talla = models.CharField(max_length=10)
     precio = models.DecimalField(max_digits=8, decimal_places=2)
+    precio_proveedor = models.DecimalField(max_digits=8, decimal_places=2, default=0)  # Precio de compra
+    nombre_proveedor = models.CharField(max_length=100, blank=True)  # Nombre del proveedor
     estado = models.CharField(max_length=50)
     disponible = models.BooleanField(default=True)
     imagen = models.ImageField(upload_to='prendas/')

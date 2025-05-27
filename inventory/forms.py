@@ -16,7 +16,7 @@ class PrendaForm(forms.ModelForm):
 
     class Meta:
         model = Prenda
-        fields = ['codigo', 'nombre', 'descripcion', 'talla', 'precio', 'estado', 'imagen']
+        fields = ['codigo', 'nombre', 'descripcion', 'talla', 'precio', 'precio_proveedor', 'nombre_proveedor', 'estado', 'imagen']
         widgets = {
             'codigo': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -41,6 +41,17 @@ class PrendaForm(forms.ModelForm):
                 'title': 'Establece el precio en pesos (ej: $20000)',
                 'inputmode': 'numeric',
                 'id': 'precio-input'
+            }),
+            'precio_proveedor': forms.TextInput(attrs={
+                'class': 'form-control',
+                'title': 'Precio que costó al proveedor (ej: $10000)',
+                'inputmode': 'numeric',
+                'id': 'precio-proveedor-input'
+            }),
+            'nombre_proveedor': forms.TextInput(attrs={
+                'class': 'form-control',
+                'title': 'Nombre del proveedor',
+                'placeholder': 'Ej: María López'
             }),
             'estado': forms.TextInput(attrs={
                 'class': 'form-control',
