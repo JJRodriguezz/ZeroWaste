@@ -63,8 +63,12 @@ class PrendaForm(forms.ModelForm):
             }),
         }
 
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        if self.instance and self.instance.subcategoria:
+            self.fields['categoria'].initial = self.instance.subcategoria.categoria
 
     def clean_codigo(self):
         codigo = self.cleaned_data['codigo']
