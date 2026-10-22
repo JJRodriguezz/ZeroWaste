@@ -17,3 +17,46 @@
 
 ---
 
+
+## 🛠️ Stack
+
+Python · Django 5.2 · PostgreSQL · Chart.js · openpyxl
+
+---
+
+## 🚀 Correrlo localmente
+
+```bash
+python -m venv .venv
+source .venv/bin/activate        # en Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+Crea un archivo `.env` en la raíz con los datos de tu base PostgreSQL:
+
+```
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+DB_HOST=localhost
+DB_PORT=5432
+```
+
+Luego:
+
+```bash
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+```
+
+---
+
+## 📁 Estructura
+
+```
+zero_waste_inventory/   configuración del proyecto Django
+inventory/              prendas, catálogo, ventas, estadísticas y dashboard
+users/                  inicio de sesión, perfil y cambio de contraseña
+media/prendas/          imágenes de las prendas
+```
